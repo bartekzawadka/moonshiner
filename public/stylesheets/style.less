@@ -1,35 +1,66 @@
 // Colors definition:
-@logo-blue: rgba(38, 109, 211, 1);
-@yellow: rgba(232, 218, 178, 1);
-@dark-blue: rgba(39, 93, 173, 1);
-@blue-grey: rgba(79, 109, 122, 1);
-@light-pink: rgba(249, 212, 187, 1);
+@app-red: #E63946;
+@app-yellow: #F1FAEE;
+@app-light-blue: #A8DADC;
+@app-queen-blue: #457B9D;
+@app-logo-blue: #1D3557;
+@deep-orange: #FF5722;
 
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+// Classes
+.menu-button{
+  font-weight: bold;
+}
+
+.header-tabs{
+  width: 100%;
+  padding-top: 5px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: @app-queen-blue;
+}
+
+.header {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 110px;
+  background-color: #1d3557;
 }
 
 a {
   color: #00B7FF;
 }
 
-.x{
-  color: @logo-blue;
+.right{
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
 }
 
-.y{
-  color: @yellow;
+div.header-buttons {
+  float: right;
+  margin-top: 30px;
+  margin-right: 50px;
 }
 
-.z{
-  color: @dark-blue;
+.btn-header{
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
-.a{
-  color: @blue-grey;
+.md-button.md-accent{
+  color: @deep-orange;
 }
 
-.b{
-  color: @light-pink;
+md-nav-bar md-nav-ink-bar{
+  color: @deep-orange;
+  background-color: @deep-orange;
+}
+
+.content{
+  padding: 30px;
+}
+
+#main-container {
+  min-height: 85%;
 }
