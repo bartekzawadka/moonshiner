@@ -23,7 +23,9 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
         pg_vg: "",
         rating: "",
         description: "",
-        comments: []
+        comments: [],
+        isPrivate: false,
+        author: ""
     };
 
     if($routeParams.id){
@@ -92,7 +94,8 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
             url: '/api/liquid/'+$scope.liquid.id,
             data: $scope.liquid
         }).then(function(res){
-
+            console.log(res);
+            window.location.href = '/';
         }, function(e){
 
         });

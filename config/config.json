@@ -1,0 +1,8 @@
+{
+  "db": {
+    "user": "muser",
+    "pass": "mpass",
+    "host": "localhost",
+    "database": "moonshiner"
+  }
+}

@@ -5,6 +5,7 @@
 @app-queen-blue: #457B9D;
 @app-logo-blue: #1D3557;
 @deep-orange: #FF5722;
+@grey: #666;
 
 // Classes
 .menu-button{
@@ -63,6 +64,7 @@ md-nav-bar md-nav-ink-bar{
 
 #main-container {
   min-height: 85%;
+  margin-bottom: 20px;
 }
 
 .md-button.md-primary.form-button{
@@ -77,24 +79,8 @@ md-nav-bar md-nav-ink-bar{
   background-color: @app-queen-blue - 20;
 }
 
-//.hint {
-//  /* Position the hint */
-//  position: absolute;
-//  left: 2px;
-//  right: auto;
-//  bottom: 7px;
-//  /* Copy styles from ng-messages */
-//  font-size: 12px;
-//  line-height: 14px;
-//  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-//  /* Set our own color */
-//  color: grey; }
-//.hint.ng-hide,
-//.hint.ng-enter,
-//.hint.ng-leave.ng-leave-active {
-//  bottom: 26px;
-//  opacity: 0; }
-//.hint.ng-leave,
-//.hint.ng-enter.ng-enter-active {
-//  bottom: 7px;
-//  opacity: 1; }
+md-toolbar:not(.md-menu-toolbar).operations{
+  //border-color: 1px @grey solid;
+  background-color: @grey + 140;//@app-queen-blue + 100;
+  color: @app-queen-blue;
+}

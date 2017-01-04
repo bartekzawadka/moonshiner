@@ -19,7 +19,8 @@ html(ng-app="Moonshiner")
       div(class="header-tabs")
         md-nav-bar(md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-accent")
           md-nav-item(ng-repeat="item in tabs" md-nav-href="{{item.href}}" name="{{item.name}}") {{item.title}}
-        div(ng-view class="content")
+        div(ng-view)
+        //class="content"
 
     script(src='/modules/angular/angular.js')
     script(src='/modules/angular-material/angular-material.js')

@@ -1,4 +1,4 @@
-<div>
+<div class="content">
     <div layout="column" ng-cloak class="md-inline-form">
         <div>
             <form name="liquidForm">
@@ -36,6 +36,11 @@
                             <div ng-message="pattern">Please enter a valid rating value (0-10)</div>
                         </div>
 
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <md-switch ng-model="liquid.isPrivate" class="md-warn">
+                            Is Private
+                        </md-switch>
                     </md-input-container>
                 </section>
 
