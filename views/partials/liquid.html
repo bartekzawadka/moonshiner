@@ -28,15 +28,16 @@
                         </div>
                     </md-input-container>
 
-                    <md-input-container class="md-block">
-                        <label>Author's rating (0-10)</label>
-                        <input required name="lRating" ng-model="liquid.rating" ng-pattern="/^([1-9]|10)$/">
+                    <!--<input-stars max="10" ng-model="liquid.rating"></input-stars>-->
+                    <!--<md-input-container class="md-block">-->
+                        <!--<label>Author's rating (0-10)</label>-->
+                        <!--<input required name="lRating" ng-model="liquid.rating" ng-pattern="/^([1-9]|10)$/">-->
 
-                        <div ng-messages="liquidForm.lRating.$error">
-                            <div ng-message="pattern">Please enter a valid rating value (0-10)</div>
-                        </div>
+                        <!--<div ng-messages="liquidForm.lRating.$error">-->
+                            <!--<div ng-message="pattern">Please enter a valid rating value (0-10)</div>-->
+                        <!--</div>-->
 
-                    </md-input-container>
+                    <!--</md-input-container>-->
                     <md-input-container class="md-block">
                         <md-switch ng-model="liquid.isPrivate" class="md-warn">
                             Is Private
@@ -151,7 +152,7 @@
                                 <div class="md-list-item-text" layout="column">
                                     <h3>{{ item.author }}</h3>
                                     <h4>{{ item.comment }}</h4>
-                                    <p>{{ item.rating }}</p>
+                                    <!--<p>{{ item.rating }}</p>-->
                                 </div>
                                 <md-divider></md-divider>
                             </md-list-item>
@@ -168,10 +169,11 @@
                             <textarea ng-model="comment.comment" md-maxlength="1000" rows="5" md-select-on-focus>
                                 </textarea>
                         </md-input-container>
-                        <md-input-container class="md-block">
-                            <label>Rating</label>
-                            <input ng-model="comment.rating">
-                        </md-input-container>
+                        <!--<md-input-container class="md-block">-->
+                            <!--<label>Rating</label>-->
+                            <!--<input-stars max="10" ng-model="comment.rating"></input-stars>-->
+                            <!--&lt;!&ndash;<input ng-model="comment.rating">&ndash;&gt;-->
+                        <!--</md-input-container>-->
                         <div layout="row">
                             <span flex></span>
                             <md-button class="md-primary md-raised form-button"

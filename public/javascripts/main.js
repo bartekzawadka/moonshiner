@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2016-12-26.
  */
-var app = angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages']);
+var app = angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars']);
 
 app.config(function($routeProvider, $locationProvider){
     $locationProvider.html5Mode(true);

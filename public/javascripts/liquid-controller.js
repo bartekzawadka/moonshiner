@@ -21,7 +21,7 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
         aromas: [],
         accessories: [],
         pg_vg: "",
-        rating: "",
+        ratings: [],
         description: "",
         comments: [],
         isPrivate: false,
