@@ -12,11 +12,11 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         })
         .when('/liquids/liquid',{
             templateUrl: '/partials/liquid.html',
-            controller: LiquidController
+            controller: 'LiquidController'
         })
         .when('/liquids/liquid/:id',{
             templateUrl: '/partials/liquid.html',
-            controller: LiquidController
+            controller: 'LiquidController'
         })
         .when('/setups', {
             templateUrl: '/partials/setups.html',

@@ -1,13 +1,19 @@
 /**
  * Created by barte_000 on 2016-12-30.
  */
-function LiquidController($scope, $http, $routeParams, $mdDialog){
+angular.module('Moonshiner').controller('LiquidController', function($scope, $http, $routeParams, $mdDialog){
 
     $scope.aroma = {};
     $scope.acc = {};
 
     $scope.comment = {};
     $scope.commentsVisible = false;
+
+    $scope.rating = null;
+
+    $scope.canAddRating = false;
+
+    $scope.isNewDocument = false;
 
     $scope.liquid = {
         id: "",
@@ -34,7 +40,10 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
         regMode();
     }
 
+    updateRatingSection();
+
     function editMode(){
+        $scope.isNewDocument = false;
         $scope.title = "Editing liquid";
         $scope.commentsVisible = true;
 
@@ -47,6 +56,28 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
 
     function regMode(){
         $scope.title = "Adding liquid";
+        $scope.isNewDocument = true;
+    }
+
+    function updateRatingSection (){
+
+        if($scope.isNewDocument || !$scope.$parent.account || !$scope.$parent.account.isAuthenticated) {
+            $scope.canAddRating = false;
+            return;
+        }
+
+        if(!$scope.liquid.ratings || $scope.liquid.ratings.length == 0) {
+            $scope.canAddRating = true;
+            return;
+        }
+        for(var k in $scope.liquid.ratings){
+            if($scope.liquid.ratings[k].author && $scope.liquid.ratings[k].author == $scope.$parent.account.user.username) {
+                $scope.canAddRating = false;
+                return;
+            }
+        }
+
+        $scope.canAddRating = true;
     }
 
     $scope.addAroma = function(){
@@ -68,7 +99,6 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
     $scope.addComment = function(){
         $scope.liquid.comments.push({
             author: $scope.comment.author,
-            rating: $scope.comment.rating,
             comment: $scope.comment.comment
         });
         $scope.comment = {};
@@ -88,6 +118,19 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
         });
     };
 
+    $scope.addRating = function(){
+        $scope.liquid.ratings.push({
+            author: $scope.$parent.account.user.username,
+            rating: $scope.rating,
+            date: new Date()
+        });
+        updateRatingSection();
+    };
+
+    $scope.clickHandler= function (prop) {
+        $scope.rating = prop;
+    };
+
     $scope.saveLiquid = function(){
         $http({
             method: "POST",
@@ -99,5 +142,5 @@ function LiquidController($scope, $http, $routeParams, $mdDialog){
         }, function(e){
 
         });
-    }
-}
+    };
+});
