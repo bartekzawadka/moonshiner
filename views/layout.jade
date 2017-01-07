@@ -14,9 +14,14 @@ html(ng-app="Moonshiner")
     div(class="header md-whiteframe-3dp")
       img(src="images/grandpa.png" width="90" style="padding-left: 10px; padding-top: 10px; padding-bottom: 20px;")
       img(src="images/logo.png" width="380" style="padding-bottom: 30px;")
-      .header-buttons
-        md-button(class="md-warn btn-header") sign up
-        md-button(class="md-raised md-warn btn-header") sign in
+      .header-buttons(ng-if="!accountLoading")
+        div(class="header-item" ng-if="account.isAuthenticated" layout="row")
+          h4(class="user-info") Welcome {{account.user.fullname}}
+          md-button(class="md-warn header-item" ng-click="logOff()") log off
+        div(layout="row" ng-if="!account.isAuthenticated")
+          md-button(class="md-warn header-item" ng-click="signUp($event)") sign up
+          md-button(class="md-raised md-warn header-item" ng-click="signIn($event)") sign in
+        //md-button(class="md-raised md-warn header-item" ng-click="logOff()") log off
     div(id="main-container" class="header-tabs md-whiteframe-3dp")
       div(class="header-tabs")
         md-nav-bar(md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-accent")
@@ -32,7 +37,10 @@ html(ng-app="Moonshiner")
     script(src='/modules/angular-messages/angular-messages.min.js')
     script(src='/modules/angular-input-stars/angular-input-stars.js')
 
+
+    script(src='/javascripts/main.js')
+    script(src='/javascripts/account/logging-controller.js')
+    script(src='/javascripts/account/register-controller.js')
     script(src='/javascripts/liquid-controller.js')
     script(src='/javascripts/liquids-controller.js')
     script(src='/javascripts/setups-controller.js')
-    script(src='/javascripts/main.js')

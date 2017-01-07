@@ -1,0 +1,51 @@
+<md-dialog ng-controller="LoggingController" class="fullscreenDialog">
+    <form ng-cloak name="loginForm">
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h4>Sign in with local account:</h4>
+
+                <md-input-container class="md-block">
+                    <ng-md-icon icon="lock" style="fill: blue" size="24"></ng-md-icon>
+                    <label>E-mail</label>
+                    <input required type="email" name="username" ng-model="form.username">
+                    <div ng-messages="loginForm.username.$error">
+                        <div ng-message="required">
+                            User name is required.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input required name="password" type="password" ng-model="form.password">
+                    <div ng-messages="loginForm.password.$error">
+                        <div ng-message-exp="required">
+                            Password is required.
+                        </div>
+                    </div>
+                </md-input-container>
+                <div layout="column" layout-align="center center" ng-if="errorInfo">
+                    <p class="error-info">
+                        {{errorInfo}}
+                    </p>
+                </div>
+                <!--<md-divider></md-divider>-->
+                <!--<md-content>-->
+                    <!--<h4>Sign in with external service:</h4>-->
+                    <!--<fb:login-button show-faces="true" max-rows="1"-->
+                                     <!--size="large"></fb:login-button>-->
+                <!--</md-content>-->
+            </div>
+        </md-dialog-content>
+
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-warn" ng-click="cancel()">
+                Cancel
+            </md-button>
+            <span flex></span>
+            <md-button class="md-warn md-raised" ng-click="doSignIn()" ng-disabled="loginForm.$invalid">
+                Sign in
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -44,7 +44,7 @@ div.header-buttons {
   margin-right: 50px;
 }
 
-.btn-header{
+.header-item{
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -80,7 +80,22 @@ md-nav-bar md-nav-ink-bar{
 }
 
 md-toolbar:not(.md-menu-toolbar).operations{
-  //border-color: 1px @grey solid;
-  background-color: @grey + 140;//@app-queen-blue + 100;
+  background-color: @grey + 140;
   color: @app-queen-blue;
+}
+
+.error-info{
+  color: @app-red;
+}
+
+@media only screen and (min-width:640px) and (min-device-width:640px) {
+  .fullscreenDialog {
+    min-width: 600px;
+  }
+}
+
+.user-info {
+  color: @app-yellow;
+  line-height: 5px;
+  margin-right: 10px;
 }

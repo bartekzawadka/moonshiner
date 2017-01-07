@@ -1,0 +1,65 @@
+<md-dialog ng-controller="RegisterController" class="fullscreenDialog">
+    <form ng-cloak name="registerForm">
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Sign up:</h2>
+                <md-input-container class="md-block">
+                    <ng-md-icon icon="lock" style="fill: blue" size="24"></ng-md-icon>
+                    <label>E-mail</label>
+                    <input required type="email" name="username" ng-model="form.username"
+                           minlength="6" maxlength="100" ng-pattern="/^.+@.+\..+$/">
+                    <div ng-messages="registerForm.username.$error">
+                        <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                            Your email must be between 6 and 100 characters long and look like an e-mail address.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Full Name</label>
+                    <input required name="fullname" ng-model="form.fullname" maxlength="200">
+                    <div ng-messages="registerForm.fullname.$error">
+                        <div ng-message-exp="['required', 'maxlength']">
+                            Your full name is required and must be max 200 characters long.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input required name="password" type="password" ng-model="form.password" minlength="6"
+                           maxlength="200">
+                    <div ng-messages="registerForm.password.$error">
+                        <div ng-message-exp="['required', 'minLength', 'maxlength']">
+                            Password is required and must have between 6 and 200 characters long.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Confirm password</label>
+                    <input required name="passwordConfirm" type="password" ng-model="form.confirmPassword" minlength="6"
+                           maxlength="200">
+                    <div ng-messages="registerForm.passwordConfirm.$error">
+                        <div ng-message-exp="['required', 'minLength', 'maxlength']">
+                            Password is required and must have between 6 and 200 characters long.
+                        </div>
+                    </div>
+                </md-input-container>
+                <div layout="column" layout-align="center center" ng-if="errorInfo">
+                    <p class="error-info">
+                        {{errorInfo}}
+                    </p>
+                </div>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-warn" ng-click="cancel()">
+                Cancel
+            </md-button>
+            <span flex></span>
+            <md-button class="md-warn md-raised" ng-click="doSignUp()"
+                       ng-disabled="registerForm.$invalid || form.password != form.confirmPassword">
+                Sign up
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
