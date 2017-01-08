@@ -9,7 +9,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     $scope.comment = {};
     $scope.commentsVisible = false;
 
-    $scope.rating = null;
+    $scope.rating = 0;
 
     $scope.canAddRating = false;
 
@@ -120,7 +120,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
 
     $scope.addRating = function(){
         $scope.liquid.ratings.push({
-            author: $scope.$parent.account.user.username,
+            author: $scope.$parent.account.user.id,
             rating: $scope.rating,
             date: new Date()
         });
@@ -132,6 +132,8 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.saveLiquid = function(){
+        $scope.liquid.author = $scope.$parent.account.user.id;
+
         $http({
             method: "POST",
             url: '/api/liquid/'+$scope.liquid.id,

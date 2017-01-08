@@ -46,7 +46,7 @@ passport.serializeUser(function(username, done){
 passport.deserializeUser(function(user, done){
   if(user) {
       User.findById(user, function (err, data) {
-          return done(err, {username: data.username, fullname: data.fullname});
+          return done(err, {username: data.username, fullname: data.fullname, id: data.id});
       });
   }else {
       return done(null, false);
