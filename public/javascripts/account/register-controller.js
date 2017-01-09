@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2017-01-05.
  */
-angular.module('Moonshiner').controller('RegisterController', function($scope, $mdDialog, $http){
+angular.module('Moonshiner').controller('RegisterController', function($scope, $mdDialog, $http, $window, $location){
     $scope.form = {
         username: "",
         fullname: "",
@@ -11,7 +11,8 @@ angular.module('Moonshiner').controller('RegisterController', function($scope, $
 
     $scope.doSignUp = function(){
         $http.post('/register', $scope.form).then(function(data){
-            alert('User created');
+            $window.location.reload();
+            $location.url('/');
         }, function(e){
             if(!e || !e.data) {
                 $scope.errorInfo = e.data;

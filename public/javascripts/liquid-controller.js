@@ -47,9 +47,10 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
         $scope.title = "Editing liquid";
         $scope.commentsVisible = true;
 
-        $http.get('/api/liquid/'+$routeParams.id).success(function(data){
+        $http.get('/api/liquid/'+$routeParams.id).then(function(data){
             //var form = data.form
-        }).error(function(e){
+            $scope.liquid = data.data;
+        }, function(e){
             console.log(e);
         });
     }

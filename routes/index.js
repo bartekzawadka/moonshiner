@@ -75,8 +75,18 @@ router.post('/register', function(req, res, next){
                 res.end(err);
                 return;
             }
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end();
+
+                  req.logIn(newUser, function(err){
+          if(err){
+              res.writeHead(401, {"Content-Type": "application/json"});
+              res.end(JSON.stringify({data: err}));
+          }else{
+              res.writeHead(200, {"Content-Type": "application/json"});
+              res.end();
+          }
+      });
+            // res.writeHead(200, {"Content-Type": "application/json"});
+            // res.end();
         });
     });
 });

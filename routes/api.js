@@ -8,7 +8,6 @@ var Liquid = require(path.join(__dirname, '..', 'models', 'liquid'));
 var User = require(path.join(__dirname, '..', 'models', 'user'));
 
 router.post('/liquid', function (req, res) {
-    //console.log(JSON.stringify(req));
     var data = req.body;
 
     if (!data.lastUpdate)
@@ -24,6 +23,22 @@ router.post('/liquid', function (req, res) {
         } else {
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end();
+        }
+    });
+});
+
+router.get('/liquid/:id', function(req, res){
+    Liquid.findById(req.params.id, function(err, data){
+        if(err){
+            res.writeHead(500, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({
+                success: false,
+                error: err
+            }));
+            return;
+        }else{
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(data));
         }
     });
 });
