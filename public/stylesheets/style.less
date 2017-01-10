@@ -63,7 +63,7 @@ md-nav-bar md-nav-ink-bar{
 }
 
 #main-container {
-  min-height: 85%;
+  //min-height: 85%;
   margin-bottom: 20px;
 }
 
@@ -105,7 +105,7 @@ md-toolbar:not(.md-menu-toolbar).operations{
   margin-bottom: 0;
 }
 
-md-list-item.md-3-line .md-secondary-container p.secondary-subinfo {//, md-list-item.md-3-line>.md-no-style .md-list-item-text p .secondary-subinfo{
+md-list-item .md-secondary-container p.secondary-subinfo {//, md-list-item.md-3-line>.md-no-style .md-list-item-text p .secondary-subinfo{
   color: rgba(0,0,0,0.54);
   font-size: 14px;
   font-weight: 500;
@@ -116,16 +116,25 @@ md-list-item.md-3-line .md-secondary-container p.secondary-subinfo {//, md-list-
 
 md-list.bordered-page-list {
   padding: 0;
-  border-width: 1px 1px 0px 1px;
-  border-color: #ddd;//rgba(0,0,0,0.54);
-  border-style: solid; 
+  //border-width: 1px 1px 0px 1px;
+  //border-color: #ddd;//rgba(0,0,0,0.54);
+  //border-style: solid;
 }
 
 .md-content-list-whiteframe {
   margin-bottom: 30px !important;
 }
 
+md-dialog {
+  border-radius: 0;
+}
+
 md-input-container.search-bar {
   margin: 20px 0 0 0;
   //min-height: 0px !important;
+}
+
+md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
+  background-color: @app-queen-blue;
+  color: @app-yellow;
 }
