@@ -48,8 +48,8 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
         $scope.commentsVisible = true;
 
         $http.get('/api/liquid/'+$routeParams.id).then(function(data){
-            //var form = data.form
             $scope.liquid = data.data;
+            updateRatingSection();
         }, function(e){
             console.log(e);
         });
@@ -106,17 +106,23 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.showConfirm = function(ev){
+        var redirect = function(){
+            window.location.href = '/liquids';
+        }
+
+        if(!$scope.isNewDocument){
+            redirect();
+            return;
+        }
+
+
         var confirm = $mdDialog.confirm()
             .title('Would you like to cancel this operation?')
             .textContent('All changes already made will be lost')
             .targetEvent(ev)
             .ok('OK')
             .cancel('Cancel');
-        $mdDialog.show(confirm).then(function(){
-            window.location.href = '/';
-        }, function(){
-
-        });
+        $mdDialog.show(confirm).then(redirect);
     };
 
     $scope.addRating = function(){
