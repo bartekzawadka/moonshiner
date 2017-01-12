@@ -3,6 +3,14 @@ var router = express.Router();
 var passport = require('passport');
 var Users = require('../models/user');
 
+// FACEBOOK
+router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+
+router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/'
+}));
+
 router.get('/user', function(req, res, next){
     res.writeHead(200, {"Content-Type": "application/json"});
     res.end(JSON.stringify({isAuthenticated: req.isAuthenticated(), user: req.user}));

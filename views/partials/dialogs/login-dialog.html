@@ -28,12 +28,20 @@
                         {{errorInfo}}
                     </p>
                 </div>
-                <!--<md-divider></md-divider>-->
-                <!--<md-content>-->
-                    <!--<h4>Sign in with external service:</h4>-->
-                    <!--<fb:login-button show-faces="true" max-rows="1"-->
-                                     <!--size="large"></fb:login-button>-->
-                <!--</md-content>-->
+                <md-divider></md-divider>
+                <md-content>
+                    <h4>Sign in with external service:</h4>
+                    <div layout="row" layout-align="center center">
+                        <!--ng-click="loginFacebook()"-->
+                        <md-button class="md-warn" href="/auth/facebook">
+                            Facebook
+                            <!--<md-icon md-font-library="material-icons">
+                                facebook
+                            </md-icon>-->
+                        </md-button>
+                        <!--<a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>-->
+                    </div>
+                </md-content>
             </div>
         </md-dialog-content>
 

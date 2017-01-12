@@ -32,4 +32,8 @@ angular.module('Moonshiner').controller('LoggingController', function ($scope, $
     $scope.cancel = function() {
         $mdDialog.cancel();
     };
+
+    $scope.loginFacebook = function(){
+        $http.get('/auth/facebook');
+    }
 });

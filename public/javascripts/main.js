@@ -21,7 +21,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         .when('/setups', {
             templateUrl: '/partials/setups.html',
             controller: SetupsController
-    }).otherwise({redirectTo: '/liquids'});
+    });//.otherwise({redirectTo: '/liquids'});
 }).controller('MainController', function($scope, $location, $mdDialog, $http, $window){
     $scope.tabs = [
         { name: "liquids", title: "Liquids", href: "liquids" },

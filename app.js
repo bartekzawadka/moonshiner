@@ -13,8 +13,11 @@ var api = require('./routes/api');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
+
+// LOCAL STRATEGY
 
 passport.use(new LocalStrategy({ usernameField: 'username' }, function(username, password, done){
   if(!username){
@@ -35,6 +38,19 @@ passport.use(new LocalStrategy({ usernameField: 'username' }, function(username,
   });
 }));
 
+// FACEBOOK Strategy
+
+passport.use(new FacebookStrategy({
+  clientID: '1618843905092197',
+  clientSecret: 'aaa7a3c5f1462c19146d4d5f82f952a7',
+  callbackURL: 'http://localhost:3000/auth/facebook/callback'
+}, function(token, refreshToken, profile, done){
+  return done(null, {
+    username: profile.emails[0].value,
+    fullname: profile.name.givenName+ ' '+profile.name.familyName,
+  });
+}));
+
 passport.serializeUser(function(username, done){
   if(username) {
       done(null, username.id);
@@ -52,6 +68,9 @@ passport.deserializeUser(function(user, done){
       return done(null, false);
   }
 });
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -94,6 +113,12 @@ app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
+});
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
 });
 
 // error handler
