@@ -33,18 +33,13 @@
                     <h4>Sign in with external service:</h4>
                     <div layout="row" layout-align="center center">
                         <!--ng-click="loginFacebook()"-->
-                        <md-button class="md-warn" href="/auth/facebook">
+                        <md-button class="md-warn" ng-href="auth/facebook">
                             Facebook
-                            <!--<md-icon md-font-library="material-icons">
-                                facebook
-                            </md-icon>-->
                         </md-button>
-                        <!--<a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>-->
                     </div>
                 </md-content>
             </div>
         </md-dialog-content>
-
 
         <md-dialog-actions layout="row">
             <md-button class="md-warn" ng-click="cancel()">

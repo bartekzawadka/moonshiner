@@ -49,7 +49,7 @@ router.post('/login', function(req, res, next){
               res.end(JSON.stringify({data: err}));
           }else{
               res.writeHead(200, {"Content-Type": "application/json"});
-              res.end();
+              res.end(JSON.stringify(user));
           }
       });
   })(req, res, next);

@@ -1,11 +1,15 @@
 /**
  * Created by barte_000 on 2016-12-26.
  */
-angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars'])
-    .config(function($routeProvider, $locationProvider){
+angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars', 'ngFacebook'])
+    .config(['$routeProvider', '$locationProvider', '$facebookProvider', function($routeProvider, $locationProvider, $facebookProvider){
     $locationProvider.html5Mode(true);
     $routeProvider
-
+        .when('/auth/facebook', {
+            controller: function(){
+                window.location.href = '/auth/facebook';
+            }
+        })
         .when('/liquids', {
             templateUrl: '/partials/liquids.html',
             controller: LiquidsController
@@ -21,8 +25,33 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         .when('/setups', {
             templateUrl: '/partials/setups.html',
             controller: SetupsController
-    });//.otherwise({redirectTo: '/liquids'});
-}).controller('MainController', function($scope, $location, $mdDialog, $http, $window){
+    }).otherwise({redirectTo: '/liquids'});
+
+    // $facebookProvider.init({
+    //     appId: '1618843905092197'
+    // });
+    $facebookProvider.setAppId('1618843905092197');
+
+}]).run( function( $rootScope ) {
+  // Load the facebook SDK asynchronously
+  (function(){
+     // If we've already installed the SDK, we're done
+     if (document.getElementById('facebook-jssdk')) {return;}
+
+     // Get the first script element, which we'll use to find the parent node
+     var firstScriptElement = document.getElementsByTagName('script')[0];
+
+     // Create a new script element and set its id
+     var facebookJS = document.createElement('script'); 
+     facebookJS.id = 'facebook-jssdk';
+
+     // Set the new script's source to the source of the Facebook JS SDK
+     facebookJS.src = 'http://connect.facebook.net/en_US/all.js';
+
+     // Insert the Facebook JS SDK into the DOM
+     firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
+   }());
+}).controller('MainController', function($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService){
     $scope.tabs = [
         { name: "liquids", title: "Liquids", href: "liquids" },
         { name: "setups", title: "Setups", href: "setups" }
@@ -48,14 +77,16 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
                 }
             }
 
-            $scope.accountLoading = true;
+            // $scope.accountLoading = true;
+            // $scope.account = AuthService.getUser();
+            // $scope.accountLoading = false;
 
-            $http.get('/user').then(function (data) {
-                $scope.account = data.data;
-                $scope.accountLoading = false;
-            }, function(e){
-                $scope.accountLoading = false;
-            });
+            // $http.get('/user').then(function (data) {
+            //     $scope.account = data.data;
+            //     $scope.accountLoading = false;
+            // }, function(e){
+            //     $scope.accountLoading = false;
+            // });
     });
 
     $scope.signIn = function(ev){

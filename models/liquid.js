@@ -35,6 +35,8 @@ var liquidSchema = mongoose.Schema({
             rating: {type: Number}
         }
     ]
+},  {
+    collection: "Liquids"
 });
 
 var Liquid = mongoose.model('Liquid', liquidSchema);
