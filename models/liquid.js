@@ -26,7 +26,13 @@ var liquidSchema = mongoose.Schema({
         }
     ],
     pg_vg: {type: Number, required: true},
-    rating: {type: Number, required: true},
+    ratings: [
+        {
+            author: {type: String, required: true},
+            rating: {type: Number, required: true},
+            date: {type: Date, required: true}
+        }
+    ],
     description: {type: String},
     comments: [
         {
@@ -34,8 +40,11 @@ var liquidSchema = mongoose.Schema({
             comment: {type: String},
             rating: {type: Number}
         }
-    ]
-},  {
+    ],
+    lastUpdate: {type: Date, required: true},
+    author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    isPrivate: {type: Boolean, required: true}
+}, {
     collection: "Liquids"
 });
 

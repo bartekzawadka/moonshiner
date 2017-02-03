@@ -38,3 +38,10 @@ jspm_packages
 
 # Webstorm data
 .idea
+
+# Visual Studio code data
+.vscode
+
+# Main CSS file - generated from LESS
+
+public/stylesheets/style.css

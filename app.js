@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
 var es = require('express-session');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -47,8 +48,9 @@ passport.serializeUser(function(username, done){
 
 passport.deserializeUser(function(user, done){
   if(user) {
+      //var id = mongoose.Types.ObjectId('587389959e17411644639ad1');
       User.findById(user, function (err, data) {
-          return done(err, {username: data.username, fullname: data.fullname});
+          return done(err, {username: data.username, fullname: data.fullname, id: data.id});
       });
   }else {
       return done(null, false);

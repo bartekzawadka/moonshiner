@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2016-12-29.
  */
-function LiquidsController($scope, $http, $routeParams, $rootScope){
+function LiquidsController($scope, $http, $routeParams, $location){
     $scope.liquids = [];
 
     $http.get('/api/liquids').then(function(res){
@@ -13,4 +13,8 @@ function LiquidsController($scope, $http, $routeParams, $rootScope){
     }, function(e){
        console.log(e);
     });
+
+    $scope.openLiquid = function(id){
+        $location.url('/liquid/'+id);
+    }
 }

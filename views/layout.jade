@@ -2,12 +2,13 @@ doctype html
 html(ng-app="Moonshiner")
   head
     base(href="/")
-    title The Moonshiner
-
+    title Moonshiner
     link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
+
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href="https://fonts.googleapis.com/icon?family=Material+Icons")
-    link(rel="stylesheet", href="/modules/font-awesome/css/font-awesome.min.css")
+    //link(rel='stylesheet', href="https://fonts.googleapis.com/icon?family=Material+Icons")
+    link(rel='stylesheet', href='/stylesheets/icons/icons-style.css')
+    link(rel='stylesheet', href="/modules/font-awesome/css/font-awesome.min.css")
     link(rel='stylesheet', href='/modules/angular-input-stars/angular-input-stars.css')
 
   body(ng-controller="MainController")
@@ -43,3 +44,4 @@ html(ng-app="Moonshiner")
     script(src='/javascripts/liquids-controller.js')
     script(src='/javascripts/setups-controller.js')
     script(src='/javascripts/services/auth-service.js')
+    script(src='/javascripts/ratings-dialog-controller.js')

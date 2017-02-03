@@ -8,12 +8,15 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
 
     $scope.comment = {};
     $scope.commentsVisible = false;
+    $scope.accessoriesVisible = true;
 
-    $scope.rating = null;
+    $scope.rating = 0;
 
     $scope.canAddRating = false;
 
     $scope.isNewDocument = false;
+
+    $scope.cancelButtonText = "Cancel";
 
     $scope.liquid = {
         id: "",
@@ -45,11 +48,17 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     function editMode(){
         $scope.isNewDocument = false;
         $scope.title = "Editing liquid";
-        $scope.commentsVisible = true;
+        $scope.cancelButtonText = "Go back";
 
-        $http.get('/api/liquid/'+$routeParams.id).success(function(data){
-            //var form = data.form
-        }).error(function(e){
+        $http.get('/api/liquid/'+$routeParams.id).then(function(data){
+            $scope.liquid = data.data;
+            updateRatingSection();
+
+            $scope.commentsVisible = (($scope.$parent.account && $scope.$parent.account.isAuthenticated)
+                                    || ($scope.liquid.comments != null && $scope.liquid.comments.length > 0));
+
+            $scope.accessoriesVisible = $scope.isNewDocument || ($scope.liquid.accessories != null && $scope.liquid.accessories.length > 0)
+        }, function(e){
             console.log(e);
         });
     }
@@ -105,22 +114,28 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.showConfirm = function(ev){
+        var redirect = function(){
+            window.location.href = '/liquids';
+        };
+
+        if(!$scope.isNewDocument){
+            redirect();
+            return;
+        }
+
+
         var confirm = $mdDialog.confirm()
             .title('Would you like to cancel this operation?')
             .textContent('All changes already made will be lost')
             .targetEvent(ev)
             .ok('OK')
             .cancel('Cancel');
-        $mdDialog.show(confirm).then(function(){
-            window.location.href = '/';
-        }, function(){
-
-        });
+        $mdDialog.show(confirm).then(redirect);
     };
 
     $scope.addRating = function(){
         $scope.liquid.ratings.push({
-            author: $scope.$parent.account.user.username,
+            author: $scope.$parent.account.user.id,
             rating: $scope.rating,
             date: new Date()
         });
@@ -131,7 +146,23 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
         $scope.rating = prop;
     };
 
+    $scope.showRatings = function(){
+        $mdDialog.show({
+            locals: {data: {
+                name: $scope.liquid.name,
+                ratings: $scope.liquid.ratings
+            }
+            },
+            controller: 'RatingsDialogController',
+            templateUrl: '/partials/dialogs/liquid-ratings-dialog.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false
+        });
+    };
+
     $scope.saveLiquid = function(){
+        $scope.liquid.author = $scope.$parent.account.user.id;
+
         $http({
             method: "POST",
             url: '/api/liquid/'+$scope.liquid.id,
