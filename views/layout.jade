@@ -3,31 +3,29 @@ html(ng-app="Moonshiner")
   head
     base(href="/")
     title The Moonshiner
-    link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
 
+    link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href="https://fonts.googleapis.com/icon?family=Material+Icons")
-    link(href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet")
+    link(rel="stylesheet", href="/modules/font-awesome/css/font-awesome.min.css")
     link(rel='stylesheet', href='/modules/angular-input-stars/angular-input-stars.css')
 
   body(ng-controller="MainController")
     div(class="header md-whiteframe-3dp")
       img(src="images/grandpa.png" width="90" style="padding-left: 10px; padding-top: 10px; padding-bottom: 20px;")
       img(src="images/logo.png" width="380" style="padding-bottom: 30px;")
-      .header-buttons(ng-if="!accountLoading")
+      .header-buttons
         div(class="header-item" ng-if="account.isAuthenticated" layout="row")
           h4(class="user-info") Welcome {{account.user.fullname}}
           md-button(class="md-warn header-item" ng-click="logOff()") log off
         div(layout="row" ng-if="!account.isAuthenticated")
           md-button(class="md-warn header-item" ng-click="signUp($event)") sign up
           md-button(class="md-raised md-warn header-item" ng-click="signIn($event)") sign in
-        //md-button(class="md-raised md-warn header-item" ng-click="logOff()") log off
     div(id="main-container" class="header-tabs md-whiteframe-3dp")
       div(class="header-tabs")
         md-nav-bar(md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-accent")
           md-nav-item(ng-repeat="item in tabs" md-nav-href="{{item.href}}" name="{{item.name}}") {{item.title}}
         div(ng-view)
-        //class="content"
 
     script(src='/modules/angular/angular.js')
     script(src='/modules/angular-material/angular-material.js')
@@ -37,7 +35,6 @@ html(ng-app="Moonshiner")
     script(src='/modules/angular-messages/angular-messages.min.js')
     script(src='/modules/angular-input-stars/angular-input-stars.js')
     script(src='/modules/ng-facebook/ngFacebook.js')
-
 
     script(src='/javascripts/main.js')
     script(src='/javascripts/account/logging-controller.js')

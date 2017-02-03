@@ -1,34 +1,150 @@
 angular.module('Moonshiner').factory('AuthService', function AuthService($window, $http, $location, $rootScope, $q){
 
-    $rootScope.account = {};
-    $rootScope.account.isAuthenticated = false;
+    function setAccountToDefault(){
+        if(!$rootScope.account){
+            $rootScope.account = {
+                isAuthenticated: false,
+                user: null
+            }
+        }else{
+            $rootScope.account.isAuthenticated = false;
+            $rootScope.account.user = null;
+        }
+    }
+
+    $rootScope.account = getUserFromSessionStorage();
+
+    function getUserFromSessionStorage(){
+        var token = $window.sessionStorage.token;
+        if(token && token !== 'undefined'){
+            var encodedProfile = token.split('.')[1];
+            var profile = JSON.parse(urlBase64Decode(encodedProfile));
+            return {
+                user: profile,
+                isAuthenticated: true
+            };
+        }
+        return undefined;
+    }
+
+    function urlBase64Decode(str) {
+        var output = str.replace('-', '+').replace('_', '/');
+        switch (output.length % 4) {
+            case 0:
+                break;
+            case 2:
+                output += '==';
+                break;
+            case 3:
+                output += '=';
+                break;
+            default:
+                throw 'Illegal base64url string!';
+        }
+
+        return window.atob(output);
+    }
 
     return {
         login: function(user, callback){
             var deferred = $q.defer(), 
                 cb = callback || angular.noop;
-            $http.post('/login', user).then(function(data){
-                if(!$rootScope.account){
-                    $rootScope.account = {};
-                }
+            $http.post('/user/login', user).then(function(data){
 
+                setAccountToDefault();
+
+                $window.sessionStorage.token = data.data.token;
+                var encodedProfile = data.data.token.split('.')[1];
+                var profile = JSON.parse(urlBase64Decode(encodedProfile));
                 $rootScope.account.isAuthenticated = true;
-                $rootScope.account.user = data.data;
+                $rootScope.account.user = profile;
 
                 cb();
-                deferred.resolve();
+                deferred.resolve(profile);
             }, function(e){
-                if(!$rootScope.account){
-                    $rootScope.account = {};
+                setAccountToDefault();
+
+                var error = "";
+                if(e.data){
+                    if(e.data.error)
+                        error = e.data.error;
+                    else
+                        error = e.data;
                 }
 
-                $rootScope.account.isAuthenticated = false;
-                $rootScope.account.user = null;
-
-                cb(e);
-                deferred.reject($rootScope.account);
+                cb(error);
+                deferred.reject(error);
             });
 
+            return deferred.promise;
+        },
+
+        loginFacebook: function(user, callback){
+            var deferred = $q.defer(),
+                cb = callback || angular.noop;
+            $http.post('/user/login/facebook', user).then(function(data){
+
+                $window.sessionStorage.token = data.data.token;
+
+                setAccountToDefault();
+
+                $rootScope.account.isAuthenticated = true;
+                var encodedProfile = data.data.token.split('.')[1];
+                var profile = JSON.parse(urlBase64Decode(encodedProfile));
+                $rootScope.account.user = profile;
+
+                cb();
+                deferred.resolve(profile);
+            }, function(e){
+
+                delete $window.sessionStorage.token;
+                setAccountToDefault();
+
+                var error = "";
+                if(e.data){
+                    if(e.data.error)
+                        error = e.data.error;
+                    else
+                        error = e.data;
+                }
+
+                cb(error);
+                deferred.reject(error);
+            });
+            return deferred.promise;
+        },
+
+        register: function(user, callback){
+            var deferred = $q.defer(),
+                cb = callback || angular.noop;
+
+            $http.post('/user/register', user).then(function(data){
+                $window.sessionStorage.token = data.data.token;
+
+                setAccountToDefault();
+
+                $rootScope.account.isAuthenticated = true;
+                var encodedProfile = data.data.token.split('.')[1];
+                var profile = JSON.parse(urlBase64Decode(encodedProfile));
+                $rootScope.account.user = profile;
+
+                cb();
+                deferred.resolve(profile);
+            }, function(e){
+                delete $window.sessionStorage.token;
+                setAccountToDefault();
+
+                var error = "";
+                if(e.data){
+                    if(e.data.error)
+                        error = e.data.error;
+                    else
+                        error = e.data;
+                }
+
+                cb(error);
+                deferred.reject(error);
+            });
             return deferred.promise;
         },
 
@@ -36,17 +152,11 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
             var deferred = $q.defer(),
                 cb = callback || angular.noop;
 
-            $rootScope.account.isAuthenticated = false;
-            $rootScope.account.user = null;
+            delete $window.sessionStorage.token;
+            setAccountToDefault();
 
-            $http.get('/logoff').then(function(){
-                cb();
-                deferred.resolve();
-            }, function(e){
-                cb(e);
-                deferred.resolve();
-            });
-
+            cb();
+            deferred.resolve();
             return deferred.promise;
         },
 
@@ -56,6 +166,6 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
 
         isLoggedIn: function() {
             return $rootScope.account && $rootScope.account.isAuthenticated; 
-        },
+        }
     }
 });

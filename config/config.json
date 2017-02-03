@@ -4,5 +4,6 @@
     "pass": "mpass",
     "host": "localhost",
     "database": "moonshiner"
-  }
+  },
+  "tokenSecret": "1234"
 }

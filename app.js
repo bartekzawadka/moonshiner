@@ -13,7 +13,6 @@ var api = require('./routes/api');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
 
@@ -38,19 +37,6 @@ passport.use(new LocalStrategy({ usernameField: 'username' }, function(username,
   });
 }));
 
-// FACEBOOK Strategy
-
-passport.use(new FacebookStrategy({
-  clientID: '1618843905092197',
-  clientSecret: 'aaa7a3c5f1462c19146d4d5f82f952a7',
-  callbackURL: 'http://localhost:3000/auth/facebook/callback'
-}, function(token, refreshToken, profile, done){
-  return done(null, {
-    username: profile.emails[0].value,
-    fullname: profile.name.givenName+ ' '+profile.name.familyName,
-  });
-}));
-
 passport.serializeUser(function(username, done){
   if(username) {
       done(null, username.id);
@@ -68,9 +54,6 @@ passport.deserializeUser(function(user, done){
       return done(null, false);
   }
 });
-
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -99,14 +82,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/partials', express.static(path.join(__dirname, 'views', 'partials')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/user', users);
 app.use('/api', api);
-
-app.use(function (req, res, next) {
-    res.locals.user = req.user;
-    next();
-});
+app.use('*', index);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

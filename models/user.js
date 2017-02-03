@@ -9,7 +9,8 @@ var config = require(path.join(__dirname, '..', 'config', 'config.json'));
 var userSchema = mongoose.Schema({
     username: {type: String, required: true},
     fullname: {type: String, required: true},
-    password: {type: String, required: true}
+    password: {type: String, required: false},
+    facebook: {}
 }, {
     collection: "Users"
 });
