@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2016-12-30.
  */
-angular.module('Moonshiner').controller('LiquidController', function($scope, $http, $routeParams, $mdDialog){
+angular.module('Moonshiner').controller('LiquidController', function($scope, $http, $routeParams, $mdDialog, AuthService){
 
     $scope.aroma = {};
     $scope.acc = {};
@@ -37,21 +37,26 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
         author: ""
     };
 
-    if($routeParams.id){
-        editMode();
-    }else{
-        regMode();
+    function loadView(){
+        if($routeParams.id){
+            editMode($routeParams.id);
+        }else{
+            regMode();
+        }
     }
+
+    loadView();
 
     updateRatingSection();
 
-    function editMode(){
+    function editMode(id){
         $scope.isNewDocument = false;
         $scope.title = "Editing liquid";
         $scope.cancelButtonText = "Go back";
 
         $http.get('/api/liquid/'+$routeParams.id).then(function(data){
             $scope.liquid = data.data;
+            $scope.liquid.id = $scope.liquid._id;
             updateRatingSection();
 
             $scope.commentsVisible = (($scope.$parent.account && $scope.$parent.account.isAuthenticated)
@@ -70,7 +75,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
 
     function updateRatingSection (){
 
-        if($scope.isNewDocument || !$scope.$parent.account || !$scope.$parent.account.isAuthenticated) {
+        if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated) {
             $scope.canAddRating = false;
             return;
         }
@@ -80,7 +85,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
             return;
         }
         for(var k in $scope.liquid.ratings){
-            if($scope.liquid.ratings[k].author && $scope.liquid.ratings[k].author == $scope.$parent.account.user.username) {
+            if($scope.liquid.ratings[k].author && $scope.liquid.ratings[k].author._id == AuthService.getUser().user._id) {
                 $scope.canAddRating = false;
                 return;
             }
@@ -106,10 +111,22 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.addComment = function(){
-        $scope.liquid.comments.push({
-            author: $scope.comment.author,
+
+        var comment = {
+            author: AuthService.getUser().user._id,
             comment: $scope.comment.comment
+        };
+
+        $http.post('/api/liquid/comment', {
+            liquidId: $scope.liquid.id,
+            comment: comment
+            }).then(function(data){
+            editMode($scope.liquid.id);
+        }, function(e){
+            alert(e);
+            editMode($scope.liquid.id);
         });
+
         $scope.comment = {};
     };
 
@@ -123,7 +140,6 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
             return;
         }
 
-
         var confirm = $mdDialog.confirm()
             .title('Would you like to cancel this operation?')
             .textContent('All changes already made will be lost')
@@ -134,12 +150,22 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.addRating = function(){
-        $scope.liquid.ratings.push({
-            author: $scope.$parent.account.user.id,
-            rating: $scope.rating,
-            date: new Date()
+        var rating = {
+            author: AuthService.getUser().user._id,
+            rating: $scope.rating
+        };
+
+        $http.post('/api/liquid/rating', {
+            liquidId: $scope.liquid.id,
+            rating: rating
+        }).then(function(data){
+            editMode($scope.liquid.id);
+            updateRatingSection();
+        }, function(e){
+            alert(e);
+            editMode($scope.liquid.id);
+            updateRatingSection();
         });
-        updateRatingSection();
     };
 
     $scope.clickHandler= function (prop) {
@@ -161,7 +187,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
     };
 
     $scope.saveLiquid = function(){
-        $scope.liquid.author = $scope.$parent.account.user.id;
+        $scope.liquid.author = AuthService.getUser().user._id;
 
         $http({
             method: "POST",
@@ -171,7 +197,7 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
             console.log(res);
             window.location.href = '/';
         }, function(e){
-
+            console.log(e);
         });
     };
 });

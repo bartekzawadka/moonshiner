@@ -7,6 +7,68 @@ var path = require('path');
 var Liquid = require(path.join(__dirname, '..', 'models', 'liquid'));
 var User = require(path.join(__dirname, '..', 'models', 'user'));
 
+router.post('/liquid/comment', function(req, res){
+    var data = req.body;
+
+    if(!data) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        return res.end(JSON.stringify({
+            error: "Error parsing request data. No data received"
+        }));
+    }
+
+    var liquidId = data.liquidId;
+    var comment = data.comment;
+    comment.date = new Date();
+
+    Liquid.findByIdAndUpdate(liquidId, {
+        $push: {
+            "comments": comment
+        }
+    }, {safe: true, upsert: true}, function(err, results){
+        if(err){
+            res.writeHead(500, {"Content-Type": "application/json"});
+            return res.end(JSON.stringify({
+                error: err
+            }));
+        }
+
+        res.writeHead(200, {"Content-Type": "application/json"});
+        return res.end();
+    });
+});
+
+router.post('/liquid/rating', function(req, res){
+   var data = req.body;
+
+    if(!data) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        return res.end(JSON.stringify({
+            error: "Error parsing request data. No data received"
+        }));
+    }
+
+    var liquidId = data.liquidId;
+    var rating = data.rating;
+    rating.date = new Date();
+
+    Liquid.findByIdAndUpdate(liquidId, {
+        $push: {
+            "ratings": rating
+        }
+    }, {safe: true, upsert: true}, function(err, results){
+        if(err){
+            res.writeHead(500, {"Content-Type": "application/json"});
+            return res.end(JSON.stringify({
+                error: err
+            }));
+        }
+
+        res.writeHead(200, {"Content-Type": "application/json"});
+        return res.end();
+    });
+});
+
 router.post('/liquid', function (req, res) {
     var data = req.body;
 
@@ -28,7 +90,10 @@ router.post('/liquid', function (req, res) {
 });
 
 router.get('/liquid/:id', function(req, res){
-    Liquid.findById(req.params.id, function(err, data){
+
+    var populate = [{path: 'comments.author', select: '_id fullname username'}, {path: 'ratings.author', select: '_id fullname username'}];
+
+    Liquid.findById(req.params.id).populate(populate).exec(function(err, data){
         if(err){
             res.writeHead(500, {"Content-Type": "application/json"});
             res.end(JSON.stringify({

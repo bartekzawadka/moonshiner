@@ -1,23 +1,10 @@
 <md-toolbar class="operations">
 	<div class="md-toolbar-tools">
 		<span></span>
-		<md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="$parent.account.isAuthenticated">
+		<md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="account.isAuthenticated">
 			Add liquid
 		</md-button>
-		<!--<md-button class="form-button" href="liquids/liquid" ng-if="$parent.account.isAuthenticated">
-			<div layout="row">
-			<md-icon md-font-library="material-icons" md-colors="{color: 'blue'}">
-				add
-			</md-icon>
-			Add
-			</div>
-		</md-button>-->
 		<span flex></span>
-		<!--<div flex layout="row" layout-align="end end">
-			<md-input-container flex layout-align="center center" class="search-bar">
-				<input placeholder="search...">
-			</md-input-container>
-		</div>-->
 		<md-input-container class="search-bar" layout-align="center center">
             <label>&nbsp;</label>
             <input ng-model="search.who" placeholder="Search...">
@@ -27,8 +14,8 @@
 
 <div>
 	<div class="content">
-		<md-content class="md-whiteframe-1dp">
-			<md-list flex class="bordered-page-list">
+		<md-content>
+			<md-list flex>
 				<md-list-item class="md-3-line" ng-repeat="item in liquids" href="liquids/liquid/{{item._id}}">
 					<div class="md-list-item-text" layout="column">
 						<h3>{{item.name}}</h3>

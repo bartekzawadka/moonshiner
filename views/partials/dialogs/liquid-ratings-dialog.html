@@ -1,7 +1,7 @@
 <md-dialog class="fullscreenDialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Ratings:</h2>
+            <h2>Ratings ({{data.ratings.length}}):</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="close()">
                 <md-icon md-font-library="material-icons">
@@ -15,7 +15,7 @@
             <md-list flex>
                 <md-list-item class="md-2-line" ng-repeat="item in data.ratings">
                     <div class="md-list-item-text" layout="column">
-                        <p>{{item.author}}</p>
+                        <p>{{item.author.fullname}}</p>
                         <input-stars max="10" ng-model="item.rating" readonly
                                      class="rating-list-item-stars"></input-stars>
                         <div class="md-secondary">
