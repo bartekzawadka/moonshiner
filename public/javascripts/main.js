@@ -46,7 +46,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
     }());
 
-    moment.locale('en',{
+    moment.updateLocale('en',{
         calendar : {
             lastDay : '[Yesterday at] HH:mm',
             sameDay : '[Today at] HH:mm',

@@ -128,13 +128,13 @@ router.get('/liquids', function (req, res) {
                 "ratingAverage": {"$avg": {"$ifNull": ["$ratings.rating", 0]}},
                 "name": {"$first": '$name'},
                 "author": {"$first": '$author'},
-                "lastUpdate": {"$first": '$lastUpdate'}
-                // "lastUpdate": {"$first": {
-                //     '$dateToString': {
-                //         'format': '%Y-%m-%d %H:%M',
-                //         'date': '$lastUpdate'
-                //     }
-                // }}
+                "lastUpdate": {"$first": '$lastUpdate'},
+                "isPrivate": {"$first": '$isPrivate'}
+            }
+        },
+        {
+            "$match": {
+                "isPrivate": false
             }
         }
     ]).exec(function (error, data) {

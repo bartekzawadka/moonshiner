@@ -3,6 +3,16 @@
  */
 angular.module('Moonshiner').controller('LiquidController', function($scope, $http, $routeParams, $mdDialog, AuthService){
 
+    var formSubmitting = false;
+
+    $scope.$on('$routeChangeStart', function (next, current) {
+
+        if(!formSubmitting){
+            next.preventDefault();
+            $scope.showConfirm();
+        }
+    });
+
     $scope.aroma = {};
     $scope.acc = {};
 
@@ -188,6 +198,8 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
 
     $scope.saveLiquid = function(){
         $scope.liquid.author = AuthService.getUser().user._id;
+
+        formSubmitting = true;
 
         $http({
             method: "POST",
