@@ -86,7 +86,7 @@ md-nav-bar md-nav-ink-bar{
   background-color: @app-queen-blue - 20;
 }
 
-md-toolbar:not(.md-menu-toolbar).operations{
+md-toolbar:not(.md-menu-toolbar).light{
   background-color: @grey + 140;
   color: @app-queen-blue;
 }
@@ -136,16 +136,54 @@ md-dialog {
   border-radius: 0;
 }
 
-md-input-container.search-bar {
+div.search-bar {
   margin: 20px 0 0 0;
   //min-height: 0px !important;
 }
 
-md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
+//md-toolbar.md-default-theme:not(.md-menu-toolbar).aa,
+
+md-toolbar:not(.md-menu-toolbar) {
   background-color: @app-queen-blue;
   color: @app-yellow;
 }
 
 .author {
   color: @deep-orange !important;
+}
+
+.title-small {
+  font-size: 15px;
+}
+
+//md-toolbar:not(.md-menu-toolbar).light {
+//  background-color: ;
+//}
+md-checkbox.md-checkbox-horizontal {
+  margin: 0 0 0 15px;
+}
+
+md-checkbox.md-checkbox-horizontal .md-label {
+  margin-left: 25px;
+}
+
+md-checkbox.md-checked .md-ink-ripple  {
+  color: grey;
+}
+
+md-checkbox.md-checked .md-icon {
+  background-color: @app-light-blue;
+}
+
+md-card.filtering-toolbar {
+  padding: 0;
+  margin: 0;
+}
+
+md-toolbar:not(.md-menu-toolbar) md-icon.md-icon-orange {
+  color: @deep-orange;
+}
+
+md-input-container.md-input-container-thin {
+  margin: 5px 0;
 }

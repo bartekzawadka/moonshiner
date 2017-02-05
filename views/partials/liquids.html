@@ -1,42 +1,82 @@
-<md-toolbar class="operations">
-	<div class="md-toolbar-tools">
-		<span></span>
-		<md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="account.isAuthenticated">
-			Add liquid
-		</md-button>
-		<span flex></span>
-		<md-input-container class="search-bar" layout-align="center center">
-            <label>&nbsp;</label>
-            <input ng-model="search.who" placeholder="Search...">
+<md-toolbar class="light">
+    <div class="md-toolbar-tools">
+        <span></span>
+        <md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="account.isAuthenticated">
+            Add liquid
+        </md-button>
+        <span flex></span>
+        <md-input-container layout-align="center center">
+            <div layout="row" layout-align="center center">
+                <div class="search-bar" ng-if="!filter.isVisible">
+                    <label>&nbsp;</label>
+                    <input ng-model="search.who" placeholder="Search...">
+                </div>
+                <md-button class="md-icon-button">
+                    <md-icon class="md-icon-orange" md-font-library="material-icons" ng-click="toggleFilter()">
+                        {{filter.icon}}
+                    </md-icon>
+                </md-button>
+            </div>
         </md-input-container>
-	</div>
+    </div>
 </md-toolbar>
+<md-divider></md-divider>
+<md-card class="filtering-toolbar">
+    <div ng-if="filter.isVisible">
+        <md-card-content flex layout-padding>
+            <div flex layout="row" layout-align="center start">
+                <md-input-container class="md-input-container-thin">
+                    <label>&nbsp;</label>
+                    <input ng-model="search.who" placeholder="Search...">
+                </md-input-container>
+            </div>
+            <div layout="row" flex layout-align="center center">
+                <p>Search in:</p>
+                <div ng-repeat="item in filter.filterIn" layout="row" layout-align="center center">
+                    <md-checkbox class="md-checkbox-horizontal" ng-model="item.checked">{{item.title}}</md-checkbox>
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="center center">
+            <md-button class="md-raised">
+                <md-icon md-font-library="material-icons">clear</md-icon>
+                <span>Clear</span>
+            </md-button>
+            <md-button class="md-raised md-primary form-button">
+                <md-icon md-font-library="material-icons">done</md-icon>
+                <span>Apply</span>
+            </md-button>
+        </md-card-actions>
+    </div>
+
+</md-card>
 
 <div>
-	<div class="content">
-		<md-content>
-			<md-list flex>
-				<md-list-item class="md-3-line" ng-repeat="item in liquids" href="liquids/liquid/{{item._id}}">
-					<div class="md-list-item-text" layout="column">
-						<h3>{{item.name}}</h3>
-						<p>{{item.author.fullname}}</p>
-						<p>{{item.lastUpdate | momentFormat}}</p>
-						<!--<p>{{moment().calendar(item.lastUpdate)}}</p>-->
-						<div class="md-secondary">
-							<div layout="column" layout-align="center end">
-								<input-stars max="10" ng-model="item.ratingAverage" readonly class="rating-list-item-stars"></input-stars>
-								<div layout="row">
-									<p class="secondary-subinfo">Average: {{item.ratingAverage}}, Total ratings: {{item.ratingsCount}}</p>
+    <div class="content">
+        <md-content>
+            <md-list flex>
+                <md-list-item class="md-3-line" ng-repeat="item in liquids" href="liquids/liquid/{{item._id}}">
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{item.name}}</h3>
+                        <p>{{item.author.fullname}}</p>
+                        <p>{{item.lastUpdate | momentFormat}}</p>
+                        <div class="md-secondary">
+                            <div layout="column" layout-align="center end">
+                                <input-stars max="10" ng-model="item.ratingAverage" readonly
+                                             class="rating-list-item-stars"></input-stars>
+                                <div layout="row">
+                                    <p class="secondary-subinfo">Average: {{item.ratingAverage}}, Total ratings:
+                                        {{item.ratingsCount}}</p>
 
-									<!--<p class="secondary-subinfo"></p>-->
-								</div>
-								<!--class="secondary-subinfo">-->
-							</div>
-						</div>
-					</div>
-					<md-divider></md-divider>
-				</md-list-item>
-			</md-list>
-		</md-content>
-	</div>
+                                    <!--<p class="secondary-subinfo"></p>-->
+                                </div>
+                                <!--class="secondary-subinfo">-->
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+            </md-list>
+        </md-content>
+    </div>
 </div>
