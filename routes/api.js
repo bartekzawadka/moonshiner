@@ -129,6 +129,12 @@ router.get('/liquids', function (req, res) {
                 "name": {"$first": '$name'},
                 "author": {"$first": '$author'},
                 "lastUpdate": {"$first": '$lastUpdate'}
+                // "lastUpdate": {"$first": {
+                //     '$dateToString': {
+                //         'format': '%Y-%m-%d %H:%M',
+                //         'date': '$lastUpdate'
+                //     }
+                // }}
             }
         }
     ]).exec(function (error, data) {

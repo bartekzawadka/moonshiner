@@ -20,7 +20,8 @@
 					<div class="md-list-item-text" layout="column">
 						<h3>{{item.name}}</h3>
 						<p>{{item.author.fullname}}</p>
-						<p>{{item.lastUpdate}}</p>
+						<p>{{item.lastUpdate | date: 'yyyy-MM-dd HH:mm'}}</p>
+						<!--<p>{{moment().calendar(item.lastUpdate)}}</p>-->
 						<div class="md-secondary">
 							<div layout="column" layout-align="center end">
 								<input-stars max="10" ng-model="item.ratingAverage" readonly class="rating-list-item-stars"></input-stars>

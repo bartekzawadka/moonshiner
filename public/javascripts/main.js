@@ -7,7 +7,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         $routeProvider
             .when('/liquids', {
                 templateUrl: '/partials/liquids.html',
-                controller: LiquidsController
+                controller: 'LiquidsController'
             })
             .when('/liquids/liquid', {
                 templateUrl: '/partials/liquid.html',
