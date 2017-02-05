@@ -162,7 +162,7 @@
 						<md-list flex class="bordered-page-list">
 							<md-list-item class="md-2-line" ng-repeat="item in liquid.comments">
 								<div class="md-list-item-text" layout="column">
-									<p class="author" title="{{item.date | date: 'yyyy-MM-dd HH:mm'}}">{{ item.author.fullname }}:</p>
+									<p class="author" title="{{item.date | momentFormat}}">{{ item.author.fullname }}:</p>
 									<h4>{{ item.comment }}</h4>
 									<!--<p>{{ item.rating }}</p>-->
 								</div>

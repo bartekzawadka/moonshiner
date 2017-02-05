@@ -45,13 +45,19 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         // Insert the Facebook JS SDK into the DOM
         firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
     }());
-}).directive("fbLogin", function ($rootScope) {
-    return function (scope, iElement, iAttrs) {
-        if (FB) {
-            FB.XFBML.parse(iElement[0]);
-        }
-    };
+
+    moment.locale('en',{
+        calendar : {
+            lastDay : '[Yesterday at] HH:mm',
+            sameDay : '[Today at] HH:mm',
+            nextDay : '[Tomorrow at] HH:mm',
+            lastWeek : '[last] dddd [at] HH:mm',
+            nextWeek : 'dddd [at] HH:mm',
+            sameElse : 'dddd, MMMM D, YYYY HH:mm'
+        }});
+
 }).controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService) {
+
     $scope.tabs = [
         {name: "liquids", title: "Liquids", href: "liquids"},
         // {name: "setups", title: "Setups", href: "setups"}
