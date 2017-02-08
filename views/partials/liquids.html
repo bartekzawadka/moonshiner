@@ -11,11 +11,11 @@
                     <label>&nbsp;</label>
                     <input ng-model="search.who" placeholder="Search...">
                 </div>
-                <md-button class="md-icon-button">
+                <div class="md-button md-icon-button">
                     <md-icon class="md-icon-orange" md-font-library="material-icons" ng-click="toggleFilter()">
                         {{filter.icon}}
                     </md-icon>
-                </md-button>
+                </div>
             </div>
         </md-input-container>
     </div>
@@ -25,7 +25,7 @@
     <div ng-if="filter.isVisible">
         <md-card-content flex layout-padding>
             <div flex layout="row" layout-align="center start">
-                <md-input-container class="md-input-container-thin">
+                <md-input-container class="md-input-container-thin md-queen-blue">
                     <label>&nbsp;</label>
                     <input ng-model="search.who" placeholder="Search...">
                 </md-input-container>
@@ -33,7 +33,35 @@
             <div layout="row" flex layout-align="center center">
                 <p>Search in:</p>
                 <div ng-repeat="item in filter.filterIn" layout="row" layout-align="center center">
-                    <md-checkbox class="md-checkbox-horizontal" ng-model="item.checked">{{item.title}}</md-checkbox>
+                    <md-checkbox class="md-checkbox-horizontal md-queen-blue" ng-model="item.checked">{{item.title}}</md-checkbox>
+                </div>
+            </div>
+            <div layout="row" flex layout-align="center center">
+                <p>Last update:</p>
+                <div layout-gt-xs="row">
+                    <div flex-gt-xs>
+                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.from" md-placeholder="From..." md-open-on-focus></md-datepicker>
+                    </div>
+                    <div flex-gt-xs>
+                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.to" md-placeholder="To..." md-open-on-focus></md-datepicker>
+                    </div>
+                </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout="row" flex layout-align="center center">
+                <p>Sort: </p>
+                <div layout-gt-xs="row">
+                    <md-radio-group layout="row" ng-model="filter.sortBy.item">
+                        <md-radio-button class="md-queen-blue" ng-repeat="item in filter.sortByOptions" value="{{item.name}}">{{item.title}}</md-radio-button>
+                    </md-radio-group>
+                </div>
+            </div>
+            <div layout="row" flex layout-align="center center">
+                <p>Direction: </p>
+                <div layout-gt-xs="row">
+                    <md-switch class="md-queen-blue" ng-model="filter.sortBy.ascending">
+                        Ascending
+                    </md-switch>
                 </div>
             </div>
         </md-card-content>
@@ -42,7 +70,7 @@
                 <md-icon md-font-library="material-icons">clear</md-icon>
                 <span>Clear</span>
             </md-button>
-            <md-button class="md-raised md-primary form-button">
+            <md-button class="md-raised md-warn form-button">
                 <md-icon md-font-library="material-icons">done</md-icon>
                 <span>Apply</span>
             </md-button>
@@ -59,7 +87,7 @@
                     <div class="md-list-item-text" layout="column">
                         <h3>{{item.name}}</h3>
                         <p>{{item.author.fullname}}</p>
-                        <p>{{item.lastUpdate | momentFormat}}</p>
+                        <p display-date="{{item.lastUpdate}}"></p>
                         <div class="md-secondary">
                             <div layout="column" layout-align="center end">
                                 <input-stars max="10" ng-model="item.ratingAverage" readonly

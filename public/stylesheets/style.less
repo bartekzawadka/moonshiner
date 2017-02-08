@@ -112,7 +112,7 @@ md-toolbar:not(.md-menu-toolbar).light{
   margin-bottom: 0;
 }
 
-md-list-item .md-secondary-container p.secondary-subinfo {//, md-list-item.md-3-line>.md-no-style .md-list-item-text p .secondary-subinfo{
+md-list-item .md-secondary-container p.secondary-subinfo {
   color: rgba(0,0,0,0.54);
   font-size: 14px;
   font-weight: 500;
@@ -123,9 +123,6 @@ md-list-item .md-secondary-container p.secondary-subinfo {//, md-list-item.md-3-
 
 md-list.bordered-page-list {
   padding: 0;
-  //border-width: 1px 1px 0px 1px;
-  //border-color: #ddd;//rgba(0,0,0,0.54);
-  //border-style: solid;
 }
 
 .md-content-list-whiteframe {
@@ -138,10 +135,7 @@ md-dialog {
 
 div.search-bar {
   margin: 20px 0 0 0;
-  //min-height: 0px !important;
 }
-
-//md-toolbar.md-default-theme:not(.md-menu-toolbar).aa,
 
 md-toolbar:not(.md-menu-toolbar) {
   background-color: @app-queen-blue;
@@ -156,9 +150,6 @@ md-toolbar:not(.md-menu-toolbar) {
   font-size: 15px;
 }
 
-//md-toolbar:not(.md-menu-toolbar).light {
-//  background-color: ;
-//}
 md-checkbox.md-checkbox-horizontal {
   margin: 0 0 0 15px;
 }
@@ -169,10 +160,6 @@ md-checkbox.md-checkbox-horizontal .md-label {
 
 md-checkbox.md-checked .md-ink-ripple  {
   color: grey;
-}
-
-md-checkbox.md-checked .md-icon {
-  background-color: @app-light-blue;
 }
 
 md-card.filtering-toolbar {
@@ -187,3 +174,72 @@ md-toolbar:not(.md-menu-toolbar) md-icon.md-icon-orange {
 md-input-container.md-input-container-thin {
   margin: 5px 0;
 }
+
+.md-input-container.md-queen-blue:not(.md-input-invalid).md-input-focused .md-input {
+  broder-color: @app-queen-blue;
+}
+
+// CONTROLS ORANGE:
+
+md-checkbox.md-orange.md-checked  .md-icon {
+  background-color: @deep-orange;
+}
+
+md-radio-button.md-orange .md-on{
+  background-color: @deep-orange;
+}
+
+md-radio-button.md-orange.md-checked .md-off{
+  border-color: @deep-orange;
+}
+
+md-switch.md-orange.md-checked .md-thumb{
+  background-color: @deep-orange;
+}
+
+md-switch.md-orange.md-checked .md-ink-ripple{
+  color: @deep-orange;
+}
+
+md-switch.md-orange.md-checked .md-bar {
+  background-color: fade(@deep-orange, 50%);
+}
+
+.md-orange.md-datepicker-open .md-datepicker-calendar-icon{
+  color: @deep-orange;
+}
+
+//
+
+// CONTROLS QUEEN BLUE:
+
+md-checkbox.md-queen-blue.md-checked  .md-icon {
+  background-color: @app-queen-blue;
+}
+
+md-radio-button.md-queen-blue .md-on{
+  background-color: @app-queen-blue;
+}
+
+md-radio-button.md-queen-blue.md-checked .md-off{
+  border-color: @app-queen-blue;
+}
+
+md-switch.md-queen-blue.md-checked .md-thumb{
+  background-color: @app-queen-blue;
+}
+
+md-switch.md-checked .md-queen-blue .md-ink-ripple{
+  color: @app-queen-blue;
+}
+
+md-switch.md-queen-blue.md-checked .md-bar {
+  background-color: fade(@app-queen-blue, 50%);
+}
+
+.md-queen-blue.md-datepicker-open .md-datepicker-calendar-icon{
+  color: @app-queen-blue;
+}
+
+//
+

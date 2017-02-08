@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2016-12-30.
  */
-angular.module('Moonshiner').controller('LiquidController', function($scope, $http, $routeParams, $mdDialog, AuthService){
+function LiquidController($scope, $http, $routeParams, $mdDialog, AuthService){
 
     var formSubmitting = false;
 
@@ -212,4 +212,4 @@ angular.module('Moonshiner').controller('LiquidController', function($scope, $ht
             console.log(e);
         });
     };
-});
+};

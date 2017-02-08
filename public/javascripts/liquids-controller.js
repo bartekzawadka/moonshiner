@@ -1,7 +1,8 @@
 /**
  * Created by barte_000 on 2016-12-29.
  */
-angular.module('Moonshiner').controller('LiquidsController', function ($scope, $http, $routeParams, $location){
+function LiquidsController($scope, $http, $routeParams, $location){
+
     $scope.liquids = [];
     $scope.filter = {
         isVisible: false,
@@ -12,7 +13,21 @@ angular.module('Moonshiner').controller('LiquidsController', function ($scope, $
             {name: "author", title: "Author", checked: true},
             {name: "aromas", title: "Aromas", checked: true},
             {name: "accessories", title: "Accessories", checked: true}
-        ]
+        ],
+        sortByOptions: [
+            {name: "name", title: "Name"},
+            {name: "rating", title: "Rating"},
+            {name: "author", title: "Author"},
+            {name: "date", title: "Last update"}
+        ],
+        sortBy: {
+          item: null,
+          ascending: true
+        },
+        lastUpdate: {
+            from: null,
+            to: null
+        }
     };
 
     $scope.toggleFilter = function(){
@@ -37,4 +52,4 @@ angular.module('Moonshiner').controller('LiquidsController', function ($scope, $
     $scope.openLiquid = function(id){
         $location.url('/liquid/'+id);
     };
-});
+}

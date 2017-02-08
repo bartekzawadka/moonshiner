@@ -1,21 +1,21 @@
 /**
  * Created by barte_000 on 2016-12-26.
  */
-angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars', 'ngFacebook'])
-    .config(['$routeProvider', '$locationProvider', '$facebookProvider', function ($routeProvider, $locationProvider, $facebookProvider) {
+angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars','ngFacebook' ])
+    .config(function ($routeProvider, $locationProvider, $facebookProvider) {
         $locationProvider.html5Mode(true);
         $routeProvider
             .when('/liquids', {
                 templateUrl: '/partials/liquids.html',
-                controller: 'LiquidsController'
+                controller: LiquidsController
             })
             .when('/liquids/liquid', {
                 templateUrl: '/partials/liquid.html',
-                controller: 'LiquidController'
+                controller: LiquidController
             })
             .when('/liquids/liquid/:id', {
                 templateUrl: '/partials/liquid.html',
-                controller: 'LiquidController'
+                controller: LiquidController
             })
             .when('/setups', {
                 templateUrl: '/partials/setups.html',
@@ -24,7 +24,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
 
         $facebookProvider.setAppId('1618843905092197');
 
-    }]).run(function ($rootScope) {
+    }).run(function ($rootScope) {
     // Load the facebook SDK asynchronously
     (function () {
         // If we've already installed the SDK, we're done
@@ -51,16 +51,17 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
             lastDay : '[Yesterday at] HH:mm',
             sameDay : '[Today at] HH:mm',
             nextDay : '[Tomorrow at] HH:mm',
-            lastWeek : '[last] dddd [at] HH:mm',
+            lastWeek : '[Last] dddd [at] HH:mm',
             nextWeek : 'dddd [at] HH:mm',
             sameElse : 'dddd, MMMM D, YYYY HH:mm'
         }});
 
-}).controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService) {
+})
+    .controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService ) {
 
     $scope.tabs = [
         {name: "liquids", title: "Liquids", href: "liquids"},
-        // {name: "setups", title: "Setups", href: "setups"}
+        //{name: "setups", title: "Setups", href: "setups"}
     ];
     //$scope.accountLoading = true;
 
