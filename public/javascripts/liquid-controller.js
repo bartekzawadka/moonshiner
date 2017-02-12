@@ -1,15 +1,15 @@
 /**
  * Created by barte_000 on 2016-12-30.
  */
-function LiquidController($scope, $http, $routeParams, $mdDialog, AuthService){
+function LiquidController($scope,$location, $window, $http, $routeParams, $mdDialog, AuthService){
 
     var formSubmitting = false;
 
     $scope.$on('$routeChangeStart', function (next, current) {
 
         if(!formSubmitting){
-            next.preventDefault();
-            $scope.showConfirm();
+            //next.preventDefault();
+            $scope.showConfirm(null, next);
         }
     });
 
@@ -140,9 +140,10 @@ function LiquidController($scope, $http, $routeParams, $mdDialog, AuthService){
         $scope.comment = {};
     };
 
-    $scope.showConfirm = function(ev){
+    $scope.showConfirm = function(ev, next){
         var redirect = function(){
-            window.location.href = '/liquids';
+            $location.path('/liquids');
+            $scope.$apply();
         };
 
         if(!$scope.isNewDocument){
@@ -207,7 +208,8 @@ function LiquidController($scope, $http, $routeParams, $mdDialog, AuthService){
             data: $scope.liquid
         }).then(function(res){
             console.log(res);
-            window.location.href = '/';
+            $location.path('/');
+            $scope.$apply();
         }, function(e){
             console.log(e);
         });
