@@ -172,7 +172,11 @@ md-toolbar:not(.md-menu-toolbar) md-icon.md-icon-orange {
 }
 
 md-input-container.md-input-container-thin {
-  margin: 5px 0;
+  margin: 5px 0 0 0;
+}
+
+md-input-container.md-input-container-thin .no-errors-spacer {
+    display: none;
 }
 
 .md-input-container.md-queen-blue:not(.md-input-invalid).md-input-focused .md-input {
@@ -242,4 +246,47 @@ md-switch.md-queen-blue.md-checked .md-bar {
 }
 
 //
+.md-label, md-select-value span, md-option .md-text {
+  font-size: 14px;
+}
 
+.font-small {
+  font-size: 14px;
+}
+
+.search-bar-details {
+  width: 50%;
+}
+
+md-select{
+  width: 200px;
+}
+
+md-input-container.no-errors-spacer .md-errors-spacer {
+  display: none;
+}
+
+md-select:not([disabled]):focus .md-select-value{
+  border-bottom-color: @app-queen-blue;
+}
+
+md-select-menu md-content md-option[selected], md-select-menu md-content md-option:focus {
+  color: @app-queen-blue !important;
+}
+
+md-input-container:not(.md-input-invalid).md-input-focused .md-input {
+  border-color: @app-queen-blue;
+}
+
+md-input-container:not(.md-input-invalid).md-input-focused label {
+  color: @app-queen-blue;
+}
+
+.search-bar input {
+  font-size: 14px;
+}
+
+::-webkit-input-placeholder { font-size: 14px; }
+::-moz-placeholder { font-size: 14px; } /* firefox 19+ */
+:-ms-input-placeholder { font-size: 14px; } /* ie */
+input:-moz-placeholder { font-size: 14px; }

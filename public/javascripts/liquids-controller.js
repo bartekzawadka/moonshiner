@@ -4,6 +4,9 @@
 function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterService){
 
     $scope.liquids = [];
+    $scope.filterVisible = false;
+    $scope.filterIcon = "expand_more";
+
 
     $scope.clearFilter = function(openPan){
         $scope.filter = LiquidsFilterService.resetFilter();
@@ -44,14 +47,14 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
 
     $scope.toggleFilter = function(openPan){
         if(openPan == undefined || openPan == null || openPan === 'undefined')
-            $scope.filter.isVisible = !$scope.filter.isVisible;
+            $scope.filterVisible = !$scope.filterVisible;
         else
-            $scope.filter.isVisible = openPan;
+            $scope.filterVisible = openPan;
 
-        if($scope.filter.isVisible)
-            $scope.filter.icon = "expand_less";
+        if($scope.filterVisible)
+            $scope.filterIcon = "expand_less";
         else{
-            $scope.filter.icon = "expand_more";
+            $scope.filterIcon = "expand_more";
         }
     };
 

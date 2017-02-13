@@ -19,8 +19,12 @@ html(ng-app="Moonshiner")
           h4(class="user-info") Welcome {{account.user.fullname}}
           md-button(class="md-warn header-item" ng-click="logOff()") log off
         div(layout="row" ng-if="!account.isAuthenticated")
-          md-button(class="md-warn header-item" ng-click="signUp($event)") sign up
-          md-button(class="md-raised md-warn header-item" ng-click="signIn($event)") sign in
+          md-button(class="md-warn header-item" ng-click="signUp($event)")
+            md-icon(md-font-library="material-icons") person_add
+            span sign up
+          md-button(class="md-raised md-warn header-item" ng-click="signIn($event)")
+            md-icon(md-font-library="material-icons") person
+            span sign in
     div(id="main-container" class="header-tabs md-whiteframe-3dp")
       div(class="header-tabs")
         md-nav-bar(md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-accent")

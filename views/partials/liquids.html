@@ -10,13 +10,13 @@
         <span flex></span>
         <md-input-container layout-align="center center">
             <div layout="row" layout-align="center center">
-                <div class="search-bar" ng-if="!filter.isVisible">
+                <div class="search-bar" ng-if="!filterVisible">
                     <label>&nbsp;</label>
                     <input ng-model="filter.phrase" placeholder="Search..." ng-keypress="keyPress($event)">
                 </div>
                 <div class="md-button md-icon-button">
                     <md-icon class="md-icon-orange" md-font-library="material-icons" ng-click="toggleFilter()">
-                        {{filter.icon}}
+                        {{filterIcon}}
                     </md-icon>
                 </div>
             </div>
@@ -25,27 +25,16 @@
 </md-toolbar>
 <md-divider></md-divider>
 <md-card class="filtering-toolbar">
-    <div ng-if="filter.isVisible">
+    <div ng-if="filterVisible">
         <md-card-content flex layout-padding>
             <div flex layout="row" layout-align="center start">
-                <md-input-container class="md-input-container-thin md-queen-blue">
+                <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer search-bar-details">
                     <label>&nbsp;</label>
                     <input ng-model="filter.phrase" placeholder="Search...">
                 </md-input-container>
             </div>
-            <div layout="row" flex layout-align="center center" ng-if="account.isAuthenticated">
-                <md-switch class="md-queen-blue" ng-model="filter.privateOnly">
-                    Private only
-                </md-switch>
-            </div>
             <div layout="row" flex layout-align="center center">
-                <p>Search in:</p>
-                <div ng-repeat="item in filter.filterIn" layout="row" layout-align="center center">
-                    <md-checkbox class="md-checkbox-horizontal md-queen-blue" ng-model="item.checked">{{item.title}}</md-checkbox>
-                </div>
-            </div>
-            <div layout="row" flex layout-align="center center">
-                <p>Last update:</p>
+                <p class="font-small">Last update:</p>
                 <div layout-gt-xs="row">
                     <div flex-gt-xs>
                         <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.from" md-placeholder="From..." md-open-on-focus></md-datepicker>
@@ -54,23 +43,28 @@
                         <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.to" md-placeholder="To..." md-open-on-focus></md-datepicker>
                     </div>
                 </div>
+                <span flex="5" ng-if="account.isAuthenticated"></span>
+                <div layout-gt-xs="row" ng-if="account.isAuthenticated">
+                    <md-switch class="md-queen-blue" ng-model="filter.privateOnly">
+                        Private only
+                    </md-switch>
+                </div>
             </div>
             <md-divider></md-divider>
             <div layout="row" flex layout-align="center center">
-                <p>Sort: </p>
-                <div layout-gt-xs="row">
-                    <md-radio-group layout="row" ng-model="filter.sortBy.item">
-                        <md-radio-button class="md-queen-blue" ng-repeat="item in filter.sortByOptions" value="{{item.name}}">{{item.title}}</md-radio-button>
-                    </md-radio-group>
-                </div>
-            </div>
-            <div layout="row" flex layout-align="center center">
-                <p>Direction: </p>
-                <div layout-gt-xs="row">
-                    <md-switch class="md-queen-blue" ng-model="filter.sortBy.ascending">
-                        Ascending
-                    </md-switch>
-                </div>
+                <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
+                    <label>Sort by</label>
+                    <md-select ng-model="filter.sortBy.item">
+                        <md-option ng-repeat="item in filter.sortByOptions" ng-value="item.name">{{item.title}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
+                    <div layout-gt-xs="row">
+                        <md-switch class="md-queen-blue" ng-model="filter.sortBy.ascending">
+                            Ascending
+                        </md-switch>
+                    </div>
+                </md-input-container>
             </div>
         </md-card-content>
         <md-card-actions layout="row" layout-align="center center">
@@ -103,10 +97,7 @@
                                 <div layout="row">
                                     <p class="secondary-subinfo">Average: {{item.ratingAverage}}, Total ratings:
                                         {{item.ratingsCount}}</p>
-
-                                    <!--<p class="secondary-subinfo"></p>-->
                                 </div>
-                                <!--class="secondary-subinfo">-->
                             </div>
                         </div>
                     </div>

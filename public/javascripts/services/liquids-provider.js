@@ -11,18 +11,6 @@ angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider
                 filter: {},
                 sort: {}
             };
-            var fields = [];
-            if(filter.filterIn){
-                for(var k in filter.filterIn){
-                    if(filter.filterIn.hasOwnProperty(k)){
-                        if(filter.filterIn[k].checked){
-                            fields.push(filter.filterIn[k].name);
-                        }
-                    }
-                }
-
-                filterData.filter.fields = JSON.stringify(fields);
-            }
 
             filterData.filter.lastUpdate = filter.lastUpdate;
             filterData.filter.privateOnly = filter.privateOnly;

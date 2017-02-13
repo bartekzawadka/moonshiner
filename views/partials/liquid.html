@@ -26,6 +26,11 @@
 						</div>
 					</md-input-container>
 
+					<md-input-container class="md-block">
+						<label>Author</label>
+						<input name="lAuthor" ng-model="liquid.author.fullname" ng-readonly="true">
+					</md-input-container>
+
 					<md-input-container class="md-block" ng-if="$parent.account.isAuthenticated || !isNewDocument">
 						<md-checkbox ng-model="liquid.isPrivate" class="md-warn" ng-disabled="!isNewDocument">
 							Is Private

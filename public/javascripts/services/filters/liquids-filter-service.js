@@ -9,13 +9,6 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
             icon: "expand_more",
             phrase: null,
             privateOnly: false,
-            filterIn: [
-                {name: "name", title: "Name", checked: true},
-                {name: "description", title: "Description", checked: true},
-                {name: "author", title: "Author", checked: true},
-                {name: "aromas", title: "Aromas", checked: true},
-                {name: "accessories", title: "Accessories", checked: true}
-            ],
             sortByOptions: [
                 {name: "name", title: "Name"},
                 {name: "rating", title: "Rating"},

@@ -27,62 +27,47 @@ module.exports.buildMongoFilterQuery = function (urlParts){
   var urlParsed = {};
   if(urlParts.filter){
       urlParsed.filter = JSON.parse(urlParts.filter);
-      if(urlParsed.filter.fields){
-          urlParsed.filter.fields = JSON.parse(urlParsed.filter.fields);
-      }
   }
-
 
   var match = {
       "$and" : []
   };
 
-  if(urlParsed.filter.phrase && urlParsed.filter.fields && urlParsed.filter.fields.length > 0){
+  if(urlParsed.filter.phrase){
       var filter = {
-          "$or" : []
-      };
-
-      for(var k in urlParsed.filter.fields) {
-          if (urlParsed.filter.fields.hasOwnProperty(k)) {
-
-              switch(urlParsed.filter.fields[k]){
-                  case 'author':
-                      filter["$or"].push({
-                          "author.username": {
-                              "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
-                          }
-                      });
-                      filter["$or"].push({
-                          "author.fullname": {
-                              "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
-                          }
-                      });
-                      break;
-                  case 'aromas':
-                      filter["$or"].push({
-                          "aromas.name": {
-                              "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
-                          }
-                      });
-                      break;
-                  case 'accessories':
-                      filter["$or"].push({
-                          "accessories.name": {
-                              "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
-                          }
-                      });
-                      break;
-                  default:
-                      var obj = {};
-
-                      obj[urlParsed.filter.fields[k]] = {
-                          "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
-                      };
-                      filter["$or"].push(obj);
-                      break;
+          "$or" : [
+              {
+                  "name": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
+              },
+              {
+                  "description": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
+              },
+              {
+                  "author.username": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
+              },
+              {
+                  "author.fullname": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
+              },
+              {
+                  "aromas.name": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
+              },
+              {
+                  "accessories.name": {
+                      "$regex": '.*' + urlParsed.filter.phrase + '.*', "$options": 'i'
+                  }
               }
-          }
-      }
+          ]
+      };
 
       match["$and"].push(filter);
   }

@@ -96,6 +96,9 @@ router.get('/liquid/:id', function (req, res) {
     var populate = [{path: 'comments.author', select: '_id fullname username'}, {
         path: 'ratings.author',
         select: '_id fullname username'
+    },{
+     path: 'author',
+     select: '_id fullname username'
     }];
 
     Liquid.findById(req.params.id).populate(populate).exec(function (err, data) {
