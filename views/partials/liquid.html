@@ -85,7 +85,11 @@
 								</div>
 							</md-input-container>
 							<md-button class="md-primary md-raised form-button" ng-disabled="!aroma.name
-								|| !aroma.concentration || liquidForm.aPerc.$invalid" ng-click="addAroma()">Add
+								|| !aroma.concentration || liquidForm.aPerc.$invalid" ng-click="addAroma()">
+								<md-icon md-font-library="material-icons">
+									add
+								</md-icon>
+								<span>Add</span>
 							</md-button>
 					</div>
 					<p ng-if="!isNewDocument"></p>
@@ -118,7 +122,11 @@
 							</div>
 						</md-input-container>
 						<md-button class="md-primary md-raised form-button" ng-disabled="!acc.name
-                            || !acc.concentration || liquidForm.accPerc.$invalid" ng-click="addAccessory()">Add
+                            || !acc.concentration || liquidForm.accPerc.$invalid" ng-click="addAccessory()">
+							<md-icon md-font-library="material-icons">
+								add
+							</md-icon>
+							<span>Add</span>
 						</md-button>
 					</div>
 					<p ng-if="!isNewDocument"></p>
@@ -147,12 +155,19 @@
 							</md-input-container>
 							<span flex></span>
 							<div layout="row" layout-align="end center">
-								<md-button class="md-primary md-raised form-button" ng-click="addRating()" ng-if="canAddRating">Add rating
+								<md-button class="md-primary md-raised form-button" ng-click="addRating()" ng-if="canAddRating">
+									<md-icon md-font-library="material-icons">
+										add
+									</md-icon>
+									<span>Add rating</span>
 								</md-button>
 								<md-button class="md-warn md-raised"
 										   ng-disabled="liquid.ratings == null || liquid.ratings.length == 0"
 										   ng-click="showRatings()">
-									Show ratings
+									<md-icon md-font-library="material-icons">
+										star
+									</md-icon>
+									<span>Show ratings</span>
 								</md-button>
 							</div>
 						</div>
@@ -169,9 +184,7 @@
 								<div class="md-list-item-text" layout="column">
 									<p class="author" title="{{item.date | momentFormat}}">{{ item.author.fullname }}:</p>
 									<h4>{{ item.comment }}</h4>
-									<!--<p>{{ item.rating }}</p>-->
 								</div>
-								<!--<md-divider></md-divider>-->
 							</md-list-item>
 						</md-list>
 					</md-content>
@@ -184,7 +197,11 @@
 						</md-input-container>
 						<div layout="row">
 							<span flex></span>
-							<md-button class="md-primary md-raised form-button" ng-disabled="!comment.comment" ng-click="addComment()">Add comment
+							<md-button class="md-primary md-raised form-button" ng-disabled="!comment.comment" ng-click="addComment()">
+								<md-icon md-font-library="material-icons">
+									comment
+								</md-icon>
+								<span>Add comment</span>
 							</md-button>
 						</div>
 					</div>
@@ -195,10 +212,19 @@
 					<md-divider>
 					</md-divider>
 					<div layout="row">
-						<md-button class="md-warn" ng-href="/liquids">{{cancelButtonText}}</md-button><!--ng-click="showConfirm($event)"-->
+						<md-button class="md-warn" ng-href="/liquids">
+							<md-icon md-font-library="material-icons">
+								{{cancelButton.icon}}
+							</md-icon>
+							<span>{{cancelButton.text}}</span>
+						</md-button><!--ng-click="showConfirm($event)"-->
 						<span flex></span>
 						<md-button class="md-warn md-raised" ng-disabled="liquid.aromas.length == 0 || liquidForm.$invalid" ng-click="saveLiquid()"
-							ng-if="isNewDocument && $parent.account.user.username">Save
+							ng-if="isNewDocument && $parent.account.user.username">
+							<md-icon md-font-library="material-icons">
+								save
+							</md-icon>
+							<span>Save</span>
 						</md-button>
 					</div>
 				</section>

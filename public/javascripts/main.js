@@ -60,7 +60,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
     .controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService ) {
 
     $scope.tabs = [
-        {name: "liquids", title: "Liquids", href: "liquids"},
+        {name: "liquids", title: "Recipies", href: "liquids"},
         //{name: "setups", title: "Setups", href: "setups"}
     ];
     //$scope.accountLoading = true;

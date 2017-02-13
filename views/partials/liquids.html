@@ -2,10 +2,16 @@
     <div class="md-toolbar-tools">
         <span></span>
         <md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="account.isAuthenticated">
-            Add liquid
+            <md-icon md-font-library="material-icons">
+                add
+            </md-icon>
+            Add recipie
         </md-button>
         <md-button class="md-raised" href="" ng-if="account.isAuthenticated" disabled>
-            My liquids
+            <md-icon md-font-library="material-icons">
+                list
+            </md-icon>
+            <span>My recipies</span>
         </md-button>
         <span flex></span>
         <md-input-container layout-align="center center">

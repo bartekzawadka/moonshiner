@@ -29,7 +29,12 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
 
     $scope.isNewDocument = false;
 
-    $scope.cancelButtonText = "Cancel";
+    $scope.cancelButton = {
+        text: "Cancel",
+        icon: "clear"
+    };
+    //$scope.cancelButtonText = "Cancel";
+
 
     $scope.liquid = {
         id: "",
@@ -65,7 +70,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
     function editMode(id){
         $scope.isNewDocument = false;
         $scope.title = "Editing liquid";
-        $scope.cancelButtonText = "Go back";
+        $scope.cancelButton.text = "Go back";
+        $scope.cancelButton.icon = "arrow_back";
 
         $http.get('/api/liquid/'+$routeParams.id).then(function(data){
             $scope.liquid = data.data;
@@ -99,7 +105,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
 
     function updateRatingSection (){
 
-        if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated) {
+        if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated
+            || AuthService.getUser().user._id == $scope.liquid.author._id) {
             $scope.canAddRating = false;
             return;
         }
