@@ -26,7 +26,7 @@
 						</div>
 					</md-input-container>
 
-					<md-input-container class="md-block">
+					<md-input-container class="md-block" ng-if="!isNewDocument">
 						<label>Author</label>
 						<input name="lAuthor" ng-model="liquid.author.fullname" ng-readonly="true">
 					</md-input-container>
@@ -195,7 +195,7 @@
 					<md-divider>
 					</md-divider>
 					<div layout="row">
-						<md-button class="md-warn" ng-click="showConfirm($event)">{{cancelButtonText}}</md-button>
+						<md-button class="md-warn" ng-href="/liquids">{{cancelButtonText}}</md-button><!--ng-click="showConfirm($event)"-->
 						<span flex></span>
 						<md-button class="md-warn md-raised" ng-disabled="liquid.aromas.length == 0 || liquidForm.$invalid" ng-click="saveLiquid()"
 							ng-if="isNewDocument && $parent.account.user.username">Save

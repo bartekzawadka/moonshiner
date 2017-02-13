@@ -5,8 +5,6 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
 
     function getDefaultFilter(){
         return {
-            isVisible: false,
-            icon: "expand_more",
             phrase: null,
             privateOnly: false,
             sortByOptions: [

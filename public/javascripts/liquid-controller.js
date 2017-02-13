@@ -1,14 +1,17 @@
 /**
  * Created by barte_000 on 2016-12-30.
  */
-function LiquidController($scope,$location, $window, $http, $routeParams, $mdDialog, AuthService){
+function LiquidController($scope,$location, $window, $http, $timeout, $routeParams, $mdDialog, AuthService){
 
+    var initializing = true;
     var formSubmitting = false;
+    var isRedirecting = false;
+    var formChanged = false;
 
     $scope.$on('$routeChangeStart', function (next, current) {
 
-        if(!formSubmitting){
-            //next.preventDefault();
+        if(!formSubmitting && !isRedirecting && formChanged){
+            next.preventDefault();
             $scope.showConfirm(null, next);
         }
     });
@@ -81,6 +84,17 @@ function LiquidController($scope,$location, $window, $http, $routeParams, $mdDia
     function regMode(){
         $scope.title = "Adding liquid";
         $scope.isNewDocument = true;
+
+        $scope.$watch("liquid", function(){
+
+            if(initializing){
+                $timeout(function(){
+                    initializing = false;
+                })
+            }else{
+                formChanged = true;
+            }
+        }, true);
     }
 
     function updateRatingSection (){
@@ -142,8 +156,8 @@ function LiquidController($scope,$location, $window, $http, $routeParams, $mdDia
 
     $scope.showConfirm = function(ev, next){
         var redirect = function(){
+            isRedirecting = true;
             $location.path('/liquids');
-            $scope.$apply();
         };
 
         if(!$scope.isNewDocument){
@@ -157,7 +171,11 @@ function LiquidController($scope,$location, $window, $http, $routeParams, $mdDia
             .targetEvent(ev)
             .ok('OK')
             .cancel('Cancel');
-        $mdDialog.show(confirm).then(redirect);
+        $mdDialog.show(confirm).then(redirect
+            , function(e){
+                console.log(e);
+            }
+        );
     };
 
     $scope.addRating = function(){
@@ -209,8 +227,8 @@ function LiquidController($scope,$location, $window, $http, $routeParams, $mdDia
         }).then(function(res){
             console.log(res);
             $location.path('/');
-            $scope.$apply();
         }, function(e){
+            formSubmitting = false;
             console.log(e);
         });
     };
