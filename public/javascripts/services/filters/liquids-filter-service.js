@@ -6,7 +6,7 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
     function getDefaultFilter(){
         return {
             phrase: null,
-            privateOnly: false,
+            privateOnly: null,
             sortByOptions: [
                 {name: "name", title: "Name"},
                 {name: "rating", title: "Rating"},

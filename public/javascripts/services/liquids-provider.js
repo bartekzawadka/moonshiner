@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2017-02-10.
  */
-angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider($window, $http, $location, $rootScope, $q){
+angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider($window, $http, $location, $rootScope, $q, AuthService){
 
     function buildFilter(filter){
         var filterData = null;
@@ -12,9 +12,16 @@ angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider
                 sort: {}
             };
 
-            filterData.filter.lastUpdate = filter.lastUpdate;
+            if(filter.lastUpdate && (filter.lastUpdate.from || filter.lastUpdate.to))
+                filterData.filter.lastUpdate = filter.lastUpdate;
+
             filterData.filter.privateOnly = filter.privateOnly;
-            filterData.filter.phrase = filter.phrase;
+
+            if(!AuthService.isLoggedIn())
+                filterData.filter.privateOnly = false;
+
+            if(filter.phrase)
+                filterData.filter.phrase = filter.phrase;
 
             filterData.sort = {
                 name: "name",
@@ -44,6 +51,12 @@ angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider
                 method: 'GET',
                 params: buildFilter(filter)
             }).then(function(res){
+                if(!res){
+                    cb(null, "No data received");
+                    deferred.reject("No data received");
+                    return deferred.promise;
+                }
+
                 if(res.status && res.status != 200){
                     console.log("Error occurred");
                     var error = "HTTP request resulted with code "+res.status;
@@ -65,6 +78,7 @@ angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider
                 cb(null, error);
                 deferred.reject(error);
             });
+
 
             return deferred.promise;
         }

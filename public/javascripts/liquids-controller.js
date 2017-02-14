@@ -16,35 +16,6 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
         $scope.getLiquids();
     };
 
-    //$scope.filter = LiquidsFilterService.getFilter();
-    // $scope.filter = {
-    //     isVisible: false,
-    //     icon: "expand_more",
-    //     phrase: null,
-    //     privateOnly: false,
-    //     filterIn: [
-    //         {name: "name", title: "Name", checked: true},
-    //         {name: "description", title: "Description", checked: true},
-    //         {name: "author", title: "Author", checked: true},
-    //         {name: "aromas", title: "Aromas", checked: true},
-    //         {name: "accessories", title: "Accessories", checked: true}
-    //     ],
-    //     sortByOptions: [
-    //         {name: "name", title: "Name"},
-    //         {name: "rating", title: "Rating"},
-    //         {name: "author", title: "Author"},
-    //         {name: "date", title: "Last update"}
-    //     ],
-    //     sortBy: {
-    //       item: "name",
-    //       ascending: true
-    //     },
-    //     lastUpdate: {
-    //         from: null,
-    //         to: null
-    //     }
-    // };
-
     $scope.toggleFilter = function(openPan){
         if(openPan == undefined || openPan == null || openPan === 'undefined')
             $scope.filterVisible = !$scope.filterVisible;
@@ -77,6 +48,15 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
         if(event.keyCode === 13){
             $scope.getLiquids();
         }
+    };
+
+    $scope.togglePrivateOnly = function(){
+      if($scope.filter.privateOnly)
+          $scope.filter.privateOnly = null;
+      else
+          $scope.filter.privateOnly = true;
+
+      LiquidsFilterService.setFilter($scope.filter);
     };
 
     $scope.filter = LiquidsFilterService.getFilter();

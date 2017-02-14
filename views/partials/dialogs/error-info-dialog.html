@@ -1,0 +1,25 @@
+<md-dialog class="fullscreenDialog">
+        <md-toolbar class="error-info">
+            <div class="md-toolbar-tools">
+                <h2>{{errorInfo.title}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p>
+                    {{errorInfo.message}}
+                </p>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="close()">
+                <md-icon md-font-library="material-icons">
+                    check
+                </md-icon>
+                <span>OK</span>
+            </md-button>
+            <span flex></span>
+        </md-dialog-actions>
+</md-dialog>

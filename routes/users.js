@@ -6,17 +6,12 @@ var jwt = require('jsonwebtoken');
 var path = require('path');
 var config = require(path.join(__dirname, '..', 'config', 'config.json'));
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
-
 router.post('/login/facebook', function (req, res, next) {
     Users.findOne({
         'facebook.id': req.body.id
     }).exec(function (error, user) {
         if (error) {
-            res.writeHead(401, {"Content-Type": "application/json"});
+            res.writeHead(422, {"Content-Type": "application/json"});
             res.end(JSON.stringify({data: error}));
             return;
         }
@@ -24,7 +19,7 @@ router.post('/login/facebook', function (req, res, next) {
         if (!user) {
             Users.findOne({username: req.body.email}).exec(function (error, userLocal) {
                 if (error) {
-                    res.writeHead(401, {"Content-Type": "application/json"});
+                    res.writeHead(422, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({error: error}));
                     return;
                 }
@@ -88,12 +83,12 @@ router.post('/login/facebook', function (req, res, next) {
 router.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
-            res.writeHead(500, {"Content-Type": "application/json"});
+            res.writeHead(422, {"Content-Type": "application/json"});
             res.end(err);
             return;
         }
         if (!user) {
-            res.writeHead(401, {"Content-Type": "application/json"});
+            res.writeHead(422, {"Content-Type": "application/json"});
 
             var result = {
                 error: "Invalid username or password"
@@ -115,15 +110,6 @@ router.post('/login', function (req, res, next) {
         var token = jwt.sign(sendUser, config.tokenSecret);
         res.writeHead(200, {"Content-Type": "application/json"});
         return res.end(JSON.stringify({token: token}));
-        // req.logIn(user, function(err){
-        //     if(err){
-        //         res.writeHead(401, {"Content-Type": "application/json"});
-        //         res.end(JSON.stringify({data: err}));
-        //     }else{
-        //         res.writeHead(200, {"Content-Type": "application/json"});
-        //         res.end(JSON.stringify(user));
-        //     }
-        // });
     })(req, res, next);
 });
 
@@ -131,7 +117,7 @@ router.post('/register', function (req, res, next) {
     var form = req.body;
 
     if (!form || !form.username) {
-        res.writeHead(400, {"Content-Type": "application/json"});
+        res.writeHead(422, {"Content-Type": "application/json"});
         res.end(JSON.stringify({error: "Username was not provided"}));
         return;
     }
@@ -140,7 +126,7 @@ router.post('/register', function (req, res, next) {
         username: form.username
     }).exec(function (error, data) {
         if (data && data.length > 0) {
-            res.writeHead(401, {"Content-Type": "application/json"});
+            res.writeHead(422, {"Content-Type": "application/json"});
             res.end(JSON.stringify({error: "User with specified name already exists"}));
             return;
         }
@@ -151,7 +137,7 @@ router.post('/register', function (req, res, next) {
             password: form.password
         }, function (err, newUser) {
             if (err) {
-                res.writeHead(400, {"Content-Type": "application/json"});
+                res.writeHead(422, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({error: err}));
                 return;
             }

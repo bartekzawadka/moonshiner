@@ -2,7 +2,7 @@
  * Created by barte_000 on 2016-12-26.
  */
 angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars','ngFacebook' ])
-    .config(function ($routeProvider, $locationProvider, $facebookProvider) {
+    .config(function ($routeProvider, $locationProvider, $facebookProvider, $httpProvider) {
         $locationProvider.html5Mode(true);
         $routeProvider
             .when('/liquids', {
@@ -20,9 +20,11 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
             .when('/setups', {
                 templateUrl: '/partials/setups.html',
                 controller: SetupsController
-            }).otherwise({redirectTo: '/liquids'});
+            })
+            .otherwise({redirectTo: '/liquids'});
 
         $facebookProvider.setAppId('1618843905092197');
+        $httpProvider.interceptors.push('AuthInterceptor');
 
     }).run(function ($rootScope) {
     // Load the facebook SDK asynchronously
@@ -57,7 +59,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         }});
 
 })
-    .controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService ) {
+    .controller('MainController', function ($scope, $location, $mdDialog, $http, $window, $rootScope, AuthService, DialogService ) {
 
     $scope.tabs = [
         {name: "liquids", title: "Recipies", href: "liquids"},
@@ -82,32 +84,16 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
     });
 
     $scope.signIn = function (ev) {
-        $mdDialog.show({
-            controller: 'LoggingController',
-            templateUrl: '/partials/dialogs/login-dialog.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose: false,
-            fullscreen: true
-        });
+        DialogService.showSignIn(ev);
     };
 
     $scope.signUp = function (ev) {
-        $mdDialog.show({
-            controller: 'RegisterController',
-            templateUrl: '/partials/dialogs/register-dialog.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose: false,
-            fullscreen: true
-        });
-
+        DialogService.showSignUp(ev);
     };
 
     $scope.logOff = function () {
         AuthService.logout().then(function () {
-            $window.location.reload();
-            $location.url('/');
+            $location.path('/');
         });
     }
 });

@@ -74,6 +74,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         $scope.cancelButton.icon = "arrow_back";
 
         $http.get('/api/liquid/'+$routeParams.id).then(function(data){
+            if(!data)
+                return;
             $scope.liquid = data.data;
             $scope.liquid.id = $scope.liquid._id;
             updateRatingSection();
@@ -106,7 +108,7 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
     function updateRatingSection (){
 
         if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated
-            || AuthService.getUser().user._id == $scope.liquid.author._id) {
+            || !$scope.liquid.author || AuthService.getUser().user._id == $scope.liquid.author._id) {
             $scope.canAddRating = false;
             return;
         }

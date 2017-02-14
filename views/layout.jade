@@ -2,6 +2,7 @@ doctype html
 html(ng-app="Moonshiner")
   head
     base(href="/")
+    meta(charset="UTF-8")
     title Moonshiner
     link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
 
@@ -22,6 +23,7 @@ html(ng-app="Moonshiner")
           md-button(class="md-warn header-item" ng-click="signUp($event)")
             md-icon(md-font-library="material-icons") person_add
             span sign up
+          //ng-click="signIn($event)"
           md-button(class="md-raised md-warn header-item" ng-click="signIn($event)")
             md-icon(md-font-library="material-icons") person
             span sign in
@@ -47,9 +49,12 @@ html(ng-app="Moonshiner")
     script(src='/javascripts/liquid-controller.js')
     script(src='/javascripts/liquids-controller.js')
     script(src='/javascripts/setups-controller.js')
-    script(src='/javascripts/services/auth-service.js')
+    script(src='/javascripts/error-info-controller.js')
+    script(src='/javascripts/services/security/auth-service.js')
+    script(src='/javascripts/services/security/auth-interceptor.js')
     script(src='/javascripts/services/liquids-provider.js')
     script(src='/javascripts/services/filters/liquids-filter-service.js')
+    script(src='/javascripts/services/dialog-service.js')
     script(src='/javascripts/ratings-dialog-controller.js')
     script(src='/javascripts/filters/date-filter.js')
 

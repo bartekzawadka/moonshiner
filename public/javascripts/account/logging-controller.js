@@ -16,8 +16,8 @@ angular.module('Moonshiner').controller('LoggingController', function ($scope, $
         $scope.errorInfo = "";
 
         AuthService.login($scope.form).then(function(){
-            $window.location.reload();
-            $location.url('/');
+            $location.path('/');
+            $mdDialog.cancel();
         }, function(e){
             $scope.errorInfo = e;
         });
@@ -38,8 +38,8 @@ angular.module('Moonshiner').controller('LoggingController', function ($scope, $
     $scope.me = function(){
         $facebook.api('/me', {fields: 'id, name, email'}).then(function(resp){
             AuthService.loginFacebook(resp).then(function(){
-                    $window.location.reload();
-                    $location.url('/');
+                $location.path('/');
+                $mdDialog.cancel();
             })
         }, function(e){
             console.log("Error!", e);

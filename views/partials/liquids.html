@@ -51,7 +51,7 @@
                 </div>
                 <span flex="5" ng-if="account.isAuthenticated"></span>
                 <div layout-gt-xs="row" ng-if="account.isAuthenticated">
-                    <md-switch class="md-queen-blue" ng-model="filter.privateOnly">
+                    <md-switch class="md-queen-blue" ng-click="togglePrivateOnly()"> <!--ng-model="filter.privateOnly"-->
                         Private only
                     </md-switch>
                 </div>

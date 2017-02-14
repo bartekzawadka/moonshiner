@@ -2,14 +2,49 @@
  * Created by barte_000 on 2016-12-31.
  */
 var express = require('express');
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
 var router = express.Router();
-var url = require('url');
 var path = require('path');
-var filtersHelper = require('./helpers/filters-helper');
+var queryHelper = require('./helpers/query-helper');
+var config = require(path.join(__dirname, '..', 'config', 'config.json'));
 var Liquid = require(path.join(__dirname, '..', 'models', 'liquid'));
 var User = require(path.join(__dirname, '..', 'models', 'user'));
 
-router.post('/liquid/comment', function (req, res) {
+var jwtConfig = expressJwt({secret: config.tokenSecret, decode: jwt.decode});
+
+var sendContentInaccessible = function (res) {
+    res.writeHead(403, {"Content-Type": "application/json"});
+    res.end(JSON.stringify({
+        success: false,
+        error: "Sorry, you are not allowed to view this item"
+    }));
+};
+
+var getUserId = function (req, callback) {
+    var userId = undefined;
+    if (req.user && req.user._id) {
+        callback(req.user._id);
+    }
+    else if (req.headers && req.headers.authorization) {
+        try {
+            var token = req.headers.authorization.replace('Bearer ', '');
+            jwt.verify(token, config.tokenSecret, function (err, decoded) {
+                if (err || !decoded) {
+                    callback();
+                    return;
+                }
+                callback(decoded._id);
+            });
+        } catch (Exception) {
+            callback();
+        }
+    }else{
+        callback();
+    }
+};
+
+router.post('/liquid/comment', jwtConfig, function (req, res) {
     var data = req.body;
 
     if (!data) {
@@ -40,7 +75,7 @@ router.post('/liquid/comment', function (req, res) {
     });
 });
 
-router.post('/liquid/rating', function (req, res) {
+router.post('/liquid/rating', jwtConfig, function (req, res) {
     var data = req.body;
 
     if (!data) {
@@ -71,7 +106,7 @@ router.post('/liquid/rating', function (req, res) {
     });
 });
 
-router.post('/liquid', function (req, res) {
+router.post('/liquid', jwtConfig, function (req, res) {
     var data = req.body;
 
     if (!data.lastUpdate)
@@ -93,12 +128,21 @@ router.post('/liquid', function (req, res) {
 
 router.get('/liquid/:id', function (req, res) {
 
+    if (!req.params || !req.params.id) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({
+            success: false,
+            error: "Item ID was not specified or is invalid"
+        }));
+        return;
+    }
+
     var populate = [{path: 'comments.author', select: '_id fullname username'}, {
         path: 'ratings.author',
         select: '_id fullname username'
-    },{
-     path: 'author',
-     select: '_id fullname username'
+    }, {
+        path: 'author',
+        select: '_id fullname username'
     }];
 
     Liquid.findById(req.params.id).populate(populate).exec(function (err, data) {
@@ -109,115 +153,132 @@ router.get('/liquid/:id', function (req, res) {
                 error: err
             }));
         } else {
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(data));
+
+            getUserId(req, function (userId) {
+                if (!userId || (userId && data && data.author && userId != data.author._id)) {
+                    if(data.isPrivate) {
+                        sendContentInaccessible(res);
+                        return;
+                    }
+                }
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(data));
+            });
         }
     });
 });
 
 router.get('/liquids', function (req, res) {
 
-    var urlParts = url.parse(req.url, true);
+    var urlParsed = queryHelper.resolveUrlFilterSort(req.url);
 
-    var match = {
-        "isPrivate": false
-    };
-    var sort = {
-        "nameLower": 1
-    };
-
-    if (urlParts && urlParts.query && (urlParts.query.filter || urlParts.query.sort)) {
-        if(urlParts.query.filter) {
-            match = filtersHelper.buildMongoFilterQuery(urlParts.query);
-        }
-        if(urlParts.query.sort){
-            sort = filtersHelper.buildMongoSortQuery(urlParts.query);
+    var sort = queryHelper.buildMongoSortQuery(urlParsed);
+    if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
+        sort = {
+            "nameLower": 1
         }
     }
 
-    var query = [
-        {
-            "$unwind": {
-                "path": "$ratings",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$aromas",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$accessories",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
+    var userId = undefined;
 
-        {
-            "$lookup": {
-                "from": "Users",
-                "localField": "author",
-                "foreignField": "_id",
-                "as": "author"
-            }
-        },
-        {
-            "$unwind": {
-                "path": "$author",
-                "preserveNullAndEmptyArrays": true
-            }
-        },
-        {
-            "$match": match
-        },
-        {
-            "$group": {
-                "_id": "$_id",
-                "ratingsCount": {
-                    "$sum": {
-                        "$cond": [{"$gt": ["$ratings", null]}, 1, 0]
-                    }
-                },
-                "ratingAverage": {"$avg": {"$ifNull": ["$ratings.rating", 0]}},
-                "author": {"$first": '$author'},
-                "name": {"$first": '$name'},
-                "lastUpdate": {"$first": '$lastUpdate'},
-                "isPrivate": {"$first": '$isPrivate'}
-            }
-        },
-        {
-            "$project": {
-                "_id": 1,
-                "ratingsCount": 1,
-                "ratingAverage": 1,
-                "name": 1,
-                "nameLower": { "$toLower": "$name" },
-                "lastUpdate": 1,
-                "isPrivate": 1,
-                "author._id": 1,
-                "author.username": 1,
-                "author.fullname": 1
-            }
-        },{
-            "$sort": sort
-        }
-    ];
-
-    Liquid.aggregate(query).exec(function (error, data) {
-        if (error) {
-            res.writeHead(500, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({
-                success: false,
-                error: error
-            }));
-        } else {
-
-            res.writeHead(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify(data));
-        }
+    getUserId(req, function (id) {
+        userId = id;
+        executeQuery();
     });
+
+    function executeQuery() {
+        var match = queryHelper.buildMongoFilterQuery(urlParsed, userId);
+        if (!match || (Object.keys(match).length === 0 && match.constructor === Object)) {
+            match = {
+                "$and": [
+                    {"isPrivate": false}
+                ]
+            }
+        }
+
+        var query = [
+            {
+                "$unwind": {
+                    "path": "$ratings",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$aromas",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$accessories",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "Users",
+                    "localField": "author",
+                    "foreignField": "_id",
+                    "as": "author"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$author",
+                    "preserveNullAndEmptyArrays": true
+                }
+            },
+            {
+                "$match": match
+            },
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "ratingsCount": {
+                        "$sum": {
+                            "$cond": [{"$gt": ["$ratings", null]}, 1, 0]
+                        }
+                    },
+                    "ratingAverage": {"$avg": {"$ifNull": ["$ratings.rating", 0]}},
+                    "author": {"$first": '$author'},
+                    "name": {"$first": '$name'},
+                    "lastUpdate": {"$first": '$lastUpdate'},
+                    "isPrivate": {"$first": '$isPrivate'}
+                }
+            },
+            {
+                "$project": {
+                    "_id": 1,
+                    "ratingsCount": 1,
+                    "ratingAverage": 1,
+                    "name": 1,
+                    "nameLower": {"$toLower": "$name"},
+                    "lastUpdate": 1,
+                    "isPrivate": 1,
+                    "author._id": 1,
+                    "author.username": 1,
+                    "author.fullname": 1
+                }
+            }, {
+                "$sort": sort
+            }
+        ];
+
+        Liquid.aggregate(query).exec(function (error, data) {
+            if (error) {
+                res.writeHead(500, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({
+                    success: false,
+                    error: error
+                }));
+            } else {
+
+                res.writeHead(200, {"Content-Type": "application/json"});
+                res.end(JSON.stringify(data));
+            }
+        });
+    }
 });
 
 module.exports = router;

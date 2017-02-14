@@ -5,8 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
-var es = require('express-session');
+var expressJwt = require('express-jwt');
 var mongoose = require('mongoose');
+
+var config = require('./config/config.json');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -48,7 +50,6 @@ passport.serializeUser(function(username, done){
 
 passport.deserializeUser(function(user, done){
   if(user) {
-      //var id = mongoose.Types.ObjectId('587389959e17411644639ad1');
       User.findById(user, function (err, data) {
           return done(err, {username: data.username, fullname: data.fullname, id: data.id});
       });
@@ -68,12 +69,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(es({
-    resave: true,
-    saveUninitialized: true,
-    secret: 'yabadabadoo1234'
-}));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -88,12 +83,22 @@ app.use('/user', users);
 app.use('/api', api);
 app.use('*', index);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function(err, req, res, next){
+    if (err) {
+        res.writeHead(err.status, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({
+            success: false,
+            error: err
+        }));
+    }
 });
+
+// // catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -102,14 +107,14 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 module.exports = app;
