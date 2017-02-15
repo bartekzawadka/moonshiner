@@ -1,10 +1,11 @@
 // Colors definition:
 @app-red: #E63946;
-@app-yellow: #F1FAEE;
+@app-white: #F1FAEE;
 @app-light-blue: #A8DADC;
 @app-queen-blue: #457B9D;
 @app-logo-blue: #1D3557;
 @deep-orange: #FF5722;
+@app-yellow: #F0C808;
 @grey: #666;
 
 // Social
@@ -102,7 +103,7 @@ md-toolbar:not(.md-menu-toolbar).light{
 }
 
 .user-info {
-  color: @app-yellow;
+  color: @app-white;
   line-height: 5px;
   margin-right: 10px;
 }
@@ -139,12 +140,12 @@ div.search-bar {
 
 md-toolbar:not(.md-menu-toolbar) {
   background-color: @app-queen-blue;
-  color: @app-yellow;
+  color: @app-white;
 }
 
 md-toolbar.error-info {
   background-color: @app-red;
-  color: @app-yellow;
+  color: @app-white;
 }
 
 .author {
@@ -295,3 +296,17 @@ md-input-container:not(.md-input-invalid).md-input-focused label {
 ::-moz-placeholder { font-size: 14px; } /* firefox 19+ */
 :-ms-input-placeholder { font-size: 14px; } /* ie */
 input:-moz-placeholder { font-size: 14px; }
+
+.loader {
+  left: 49%;
+  top: 49%;
+  position: absolute;
+}
+
+md-icon.list-item-private-icon {
+  color: @app-yellow;
+}
+
+md-icon.list-item-public-icon {
+  color: @app-light-blue;
+}

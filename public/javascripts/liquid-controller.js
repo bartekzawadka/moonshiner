@@ -3,6 +3,8 @@
  */
 function LiquidController($scope,$location, $window, $http, $timeout, $routeParams, $mdDialog, AuthService){
 
+    $scope.showLoader = true;
+
     var initializing = true;
     var formSubmitting = false;
     var isRedirecting = false;
@@ -83,9 +85,12 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
             $scope.commentsVisible = (($scope.$parent.account && $scope.$parent.account.isAuthenticated)
                                     || ($scope.liquid.comments != null && $scope.liquid.comments.length > 0));
 
-            $scope.accessoriesVisible = $scope.isNewDocument || ($scope.liquid.accessories != null && $scope.liquid.accessories.length > 0)
-        }, function(e){
-            console.log(e);
+            $scope.accessoriesVisible = $scope.isNewDocument || ($scope.liquid.accessories != null && $scope.liquid.accessories.length > 0);
+
+            $scope.showLoader = false;
+        }, function(){
+            $scope.showLoader = false;
+            $location.path('/liquids');
         });
     }
 
@@ -103,6 +108,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
                 formChanged = true;
             }
         }, true);
+
+        $scope.showLoader = false;
     }
 
     function updateRatingSection (){

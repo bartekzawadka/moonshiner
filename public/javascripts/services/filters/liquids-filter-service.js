@@ -1,12 +1,17 @@
 /**
  * Created by barte_000 on 2017-02-12.
  */
-angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFilterService($rootScope){
+angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFilterService($rootScope, AuthService){
 
     function getDefaultFilter(){
         return {
             phrase: null,
             privateOnly: null,
+            privateOnlyOptions: [
+                {value: null, title: "All"},
+                {value: false, title: "Public"},
+                {value: true, title: "Private"}
+            ],
             sortByOptions: [
                 {name: "name", title: "Name"},
                 {name: "rating", title: "Rating"},
@@ -26,16 +31,23 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
 
     $rootScope.liquidsFilter = getDefaultFilter();
 
+    function getFilter(){
+        if(!AuthService.isLoggedIn()){
+            $rootScope.liquidsFilter.privateOnly = null;
+        }
+        return $rootScope.liquidsFilter;
+    }
+
     return {
         getFilter: function(){
-            return $rootScope.liquidsFilter;
+            return getFilter();
         },
         setFilter: function(newFilter){
             $rootScope.liquidsFilter = newFilter;
         },
         resetFilter: function(){
             $rootScope.liquidsFilter = getDefaultFilter();
-            return $rootScope.liquidsFilter;
+            return getFilter();
         }
     }
 });

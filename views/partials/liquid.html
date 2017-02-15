@@ -1,5 +1,9 @@
+<div class="loader" ng-if="showLoader" style="">
+		<md-progress-circular md-diameter="96"></md-progress-circular>
+</div>
+
 <div class="content">
-	<div layout="column" ng-cloak class="md-inline-form">
+	<div layout="column" ng-cloak class="md-inline-form" ng-if="!showLoader">
 		<div>
 			<form name="liquidForm">
 				<section>

@@ -13,10 +13,13 @@ angular.module('Moonshiner').factory('AuthInterceptor', function AuthInterceptor
        responseError: function(response){
            var dialogService = $injector.get('DialogService');
 
-           $window.history.back();
+           var deferred = $q.defer();
 
            if(response.status == 401) {
-               dialogService.showSignIn();
+               dialogService.showSignIn(null, function(){
+                   //return $q.reject(response);
+                   deferred.reject(response);
+               });
            }else if(response.status != 422){
                var data = {
                    title: response.statusText+" ("+response.status+")"
@@ -28,10 +31,16 @@ angular.module('Moonshiner').factory('AuthInterceptor', function AuthInterceptor
                        data.message = response.data.error;
                    }
                }
-               dialogService.showError(null, data);
+               dialogService.showError(null, data, function(){
+                   //return $q.reject(response);
+                   deferred.reject(response);
+               });
+           }else{
+               //return $q.reject(response);
+               deferred.reject(response);
            }
 
-           return $q.reject(response);
+           return deferred.promise;
        }
    }
 });

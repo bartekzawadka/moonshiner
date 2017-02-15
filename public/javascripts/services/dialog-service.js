@@ -3,14 +3,15 @@
  */
 angular.module('Moonshiner').factory('DialogService', function DialogService($mdDialog, $location){
    return {
-       showSignIn: function(ev){
+       showSignIn: function(ev, callback){
            $mdDialog.show({
                controller: 'LoggingController',
                templateUrl: '/partials/dialogs/login-dialog.html',
                parent: angular.element(document.body),
                targetEvent: ev,
                clickOutsideToClose: false,
-               fullscreen: true
+               fullscreen: true,
+               onComplete: callback
            });
        },
        showSignUp: function(ev){
@@ -23,7 +24,7 @@ angular.module('Moonshiner').factory('DialogService', function DialogService($md
                fullscreen: true
            });
        },
-       showError: function(ev, errorInfo){
+       showError: function(ev, errorInfo, callback){
            $mdDialog.show({
                controller: 'ErrorInfoController',
                templateUrl: '/partials/dialogs/error-info-dialog.html',
@@ -33,7 +34,8 @@ angular.module('Moonshiner').factory('DialogService', function DialogService($md
                fullscreen: true,
                locals: {
                    data: errorInfo
-               }
+               },
+               onRemoving: callback
            });
        }
    }
