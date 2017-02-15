@@ -95,5 +95,9 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
         AuthService.logout().then(function () {
             $location.path('/');
         });
-    }
+    };
+
+    $scope.openMenu = function($mdMenu, ev){
+        $mdMenu.open(ev);
+    };
 });

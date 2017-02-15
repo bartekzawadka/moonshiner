@@ -1,27 +1,29 @@
 <md-toolbar class="light">
     <div class="md-toolbar-tools">
         <span></span>
-        <md-button class="md-primary md-raised form-button" href="liquids/liquid" ng-if="account.isAuthenticated">
-            <md-icon md-font-library="material-icons">
-                add
-            </md-icon>
-            Add recipie
-        </md-button>
-        <md-button class="md-raised" href="" ng-if="account.isAuthenticated" disabled>
-            <md-icon md-font-library="material-icons">
-                list
-            </md-icon>
-            <span>My recipies</span>
-        </md-button>
+        <div ng-if="account.isAuthenticated" layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised form-button" href="liquids/liquid">
+                <md-icon md-font-library="material-icons">
+                    create
+                </md-icon>
+                New recipie
+            </md-button>
+            <!--<md-button class="md-raised" href="" ng-if="account.isAuthenticated" disabled>-->
+            <!--<md-icon md-font-library="material-icons">-->
+                <!--list-->
+            <!--</md-icon>-->
+            <!--<span>My recipies</span>-->
+        <!--</md-button>-->
+        </div>
         <span flex></span>
         <md-input-container layout-align="center center">
             <div layout="row" layout-align="center center">
                 <div class="search-bar" ng-if="!filterVisible">
                     <label>&nbsp;</label>
-                    <input ng-model="filter.phrase" placeholder="Search..." ng-keypress="keyPress($event)">
+                    <input ng-model="filter.phrase" placeholder="Search..." ng-keypress="enterPressed($event)">
                 </div>
                 <div class="md-button md-icon-button">
-                    <md-icon class="md-icon-orange" md-font-library="material-icons" ng-click="toggleFilter()">
+                    <md-icon class="md-icon-orange" md-font-library="material-icons" ng-click="toggleFilterPan()">
                         {{filterIcon}}
                     </md-icon>
                 </div>
@@ -31,12 +33,12 @@
 </md-toolbar>
 <md-divider></md-divider>
 <md-card class="filtering-toolbar">
-    <div ng-if="filterVisible">
+    <div ng-if="filterVisible" id="filterPan" ng-keydown="escapePressed($event)" tabindex="1">
         <md-card-content flex layout-padding>
             <div flex layout="row" layout-align="center start">
                 <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer search-bar-details">
                     <label>&nbsp;</label>
-                    <input ng-model="filter.phrase" placeholder="Search...">
+                    <input ng-model="filter.phrase" placeholder="Search..." ng-keypress="enterPressed($event)">
                 </md-input-container>
             </div>
             <div layout="row" flex layout-align="center center">
@@ -49,18 +51,21 @@
                         <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.to" md-placeholder="To..." md-open-on-focus></md-datepicker>
                     </div>
                 </div>
-                <span flex="5" ng-if="account.isAuthenticated"></span>
-                <div layout-gt-xs="row" ng-if="account.isAuthenticated">
-                    <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
-                        <label>Private/public</label>
-                        <md-select ng-model="filter.privateOnly">
-                            <md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">{{item.title}}</md-option>
-                        </md-select>
-                    </md-input-container>
-                    <!--<md-switch class="md-queen-blue" ng-click="togglePrivateOnly()" md-no-ink> &lt;!&ndash;ng-model="filter.privateOnly"&ndash;&gt;-->
-                        <!--Private only-->
+                <!--<span flex="5"></span>-->
+                <!--<div layout="row" layout-align="center center" ng-if="account.isAuthenticated">-->
+                    <!--<div layout-gt-xs="row" ng-if="account.isAuthenticated">-->
+                        <!--<md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">-->
+                            <!--<label>Private/public</label>-->
+                            <!--<md-select ng-model="filter.privateOnly">-->
+                                <!--<md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">{{item.title}}</md-option>-->
+                            <!--</md-select>-->
+                        <!--</md-input-container>-->
+                    <!--</div>-->
+                    <!--<span flex="5"></span>-->
+                    <!--<md-switch class="md-queen-blue" md-no-ink ng-model="filter.myOnly" ng-if="account.isAuthenticated">-->
+                        <!--<span>Only my items</span>-->
                     <!--</md-switch>-->
-                </div>
+                <!--</div>-->
             </div>
             <md-divider></md-divider>
             <div layout="row" flex layout-align="center center">

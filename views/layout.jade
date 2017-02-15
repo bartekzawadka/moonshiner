@@ -16,16 +16,33 @@ html(ng-app="Moonshiner")
       img(src="images/grandpa.png" width="90" style="padding-left: 10px; padding-top: 10px; padding-bottom: 20px;")
       img(src="images/logo.png" width="380" style="padding-bottom: 30px;")
       .header-buttons
-        div(class="header-item" ng-if="account.isAuthenticated" layout="row")
-          h4(class="user-info") Welcome {{account.user.fullname}}
-          md-button(class="md-warn header-item" ng-click="logOff()")
-            md-icon(md-font-library="material-icons") arrow_forward
-            span log off
+        div(class="header-item" ng-if="account.isAuthenticated")
+          md-menu(md-position-mode="target bottom")
+            md-list-item(ng-click="openMenu($mdMenu, $event)")
+              img(ng-src="images/user.jpg" class="md-avatar")
+              h4(class="user-info") {{account.user.fullname}}
+            md-menu-content(width="4")
+              md-menu-item
+                md-button
+                  md-icon(md-font-library="material-icons") local_library
+                  span My recipies/setups
+              md-menu-item
+                md-button
+                  md-icon(md-font-library="material-icons") settings
+                  span Preferences
+              md-divider
+              md-menu-item
+                md-button(ng-click="logOff()")
+                  md-icon(md-font-library="material-icons") arrow_forward
+                  span Log off
+          //h4(class="user-info") Welcome {{account.user.fullname}}
+          //md-button(class="md-warn header-item" ng-click="logOff()")
+          //  md-icon(md-font-library="material-icons") arrow_forward
+          //  span log off
         div(layout="row" ng-if="!account.isAuthenticated")
           md-button(class="md-warn header-item" ng-click="signUp($event)")
             md-icon(md-font-library="material-icons") person_add
             span sign up
-          //ng-click="signIn($event)"
           md-button(class="md-raised md-warn header-item" ng-click="signIn($event)")
             md-icon(md-font-library="material-icons") person
             span sign in
@@ -35,6 +52,7 @@ html(ng-app="Moonshiner")
           md-nav-item(ng-repeat="item in tabs" md-nav-href="{{item.href}}" name="{{item.name}}") {{item.title}}
         div(ng-view)
 
+    script(src='/modules/jquery/dist/jquery.min.js')
     script(src='/modules/angular/angular.js')
     script(src='/modules/angular-material/angular-material.js')
     script(src='/modules/angular-animate/angular-animate.min.js')

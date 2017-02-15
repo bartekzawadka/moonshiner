@@ -11,12 +11,12 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
     $scope.clearFilter = function(openPan){
         $scope.filter = LiquidsFilterService.resetFilter();
         if(openPan != undefined && openPan != null)
-            $scope.toggleFilter(openPan);
+            $scope.toggleFilterPan(openPan);
 
         $scope.getLiquids();
     };
 
-    $scope.toggleFilter = function(openPan){
+    $scope.toggleFilterPan = function(openPan){
         if(openPan == undefined || openPan == null || openPan === 'undefined')
             $scope.filterVisible = !$scope.filterVisible;
         else
@@ -44,19 +44,16 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
         });
     };
 
-    $scope.keyPress = function(event){
+    $scope.enterPressed = function(event){
         if(event.keyCode === 13){
             $scope.getLiquids();
         }
     };
 
-    $scope.togglePrivateOnly = function(){
-      if($scope.filter.privateOnly)
-          $scope.filter.privateOnly = null;
-      else
-          $scope.filter.privateOnly = true;
-
-      LiquidsFilterService.setFilter($scope.filter);
+    $scope.escapePressed = function(event){
+        if(event && event.keyCode == 27){
+            $scope.toggleFilterPan(false);
+        }
     };
 
     $scope.filter = LiquidsFilterService.getFilter();

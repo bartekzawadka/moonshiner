@@ -6,7 +6,7 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
     function getDefaultFilter(){
         return {
             phrase: null,
-            privateOnly: null,
+            privateOnly: false,
             privateOnlyOptions: [
                 {value: null, title: "All"},
                 {value: false, title: "Public"},
@@ -33,7 +33,7 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
 
     function getFilter(){
         if(!AuthService.isLoggedIn()){
-            $rootScope.liquidsFilter.privateOnly = null;
+            $rootScope.liquidsFilter.privateOnly = false;
         }
         return $rootScope.liquidsFilter;
     }
