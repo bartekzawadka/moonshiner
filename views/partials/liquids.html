@@ -8,12 +8,12 @@
                 </md-icon>
                 New recipie
             </md-button>
-            <!--<md-button class="md-raised" href="" ng-if="account.isAuthenticated" disabled>-->
-            <!--<md-icon md-font-library="material-icons">-->
-                <!--list-->
-            <!--</md-icon>-->
-            <!--<span>My recipies</span>-->
-        <!--</md-button>-->
+            <md-button class="md-raised" href="" ng-if="account.isAuthenticated">
+                <md-icon md-font-library="material-icons">
+                    local_library
+                </md-icon>
+                <span>My recipies</span>
+            </md-button>
         </div>
         <span flex></span>
         <md-input-container layout-align="center center">
@@ -45,26 +45,28 @@
                 <p class="font-small">Last update:</p>
                 <div layout-gt-xs="row">
                     <div flex-gt-xs>
-                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.from" md-placeholder="From..." md-open-on-focus></md-datepicker>
+                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.from" md-placeholder="From..."
+                                       md-open-on-focus></md-datepicker>
                     </div>
                     <div flex-gt-xs>
-                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.to" md-placeholder="To..." md-open-on-focus></md-datepicker>
+                        <md-datepicker class="md-queen-blue" ng-model="filter.lastUpdate.to" md-placeholder="To..."
+                                       md-open-on-focus></md-datepicker>
                     </div>
                 </div>
                 <!--<span flex="5"></span>-->
                 <!--<div layout="row" layout-align="center center" ng-if="account.isAuthenticated">-->
-                    <!--<div layout-gt-xs="row" ng-if="account.isAuthenticated">-->
-                        <!--<md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">-->
-                            <!--<label>Private/public</label>-->
-                            <!--<md-select ng-model="filter.privateOnly">-->
-                                <!--<md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">{{item.title}}</md-option>-->
-                            <!--</md-select>-->
-                        <!--</md-input-container>-->
-                    <!--</div>-->
-                    <!--<span flex="5"></span>-->
-                    <!--<md-switch class="md-queen-blue" md-no-ink ng-model="filter.myOnly" ng-if="account.isAuthenticated">-->
-                        <!--<span>Only my items</span>-->
-                    <!--</md-switch>-->
+                <!--<div layout-gt-xs="row" ng-if="account.isAuthenticated">-->
+                <!--<md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">-->
+                <!--<label>Private/public</label>-->
+                <!--<md-select ng-model="filter.privateOnly">-->
+                <!--<md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">{{item.title}}</md-option>-->
+                <!--</md-select>-->
+                <!--</md-input-container>-->
+                <!--</div>-->
+                <!--<span flex="5"></span>-->
+                <!--<md-switch class="md-queen-blue" md-no-ink ng-model="filter.myOnly" ng-if="account.isAuthenticated">-->
+                <!--<span>Only my items</span>-->
+                <!--</md-switch>-->
                 <!--</div>-->
             </div>
             <md-divider></md-divider>
@@ -72,7 +74,8 @@
                 <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
                     <label>Sort by</label>
                     <md-select ng-model="filter.sortBy.item">
-                        <md-option ng-repeat="item in filter.sortByOptions" ng-value="item.name">{{item.title}}</md-option>
+                        <md-option ng-repeat="item in filter.sortByOptions" ng-value="item.name">{{item.title}}
+                        </md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
@@ -103,8 +106,12 @@
         <md-content>
             <md-list flex>
                 <md-list-item class="md-3-line" ng-repeat="item in liquids" href="liquids/liquid/{{item._id}}">
-                    <md-icon class="list-item-private-icon" md-font-library="material-icons" ng-if="account.isAuthenticated && item.isPrivate">lock</md-icon>
-                    <md-icon class="list-item-public-icon" md-font-library="material-icons" ng-if="account.isAuthenticated && !item.isPrivate">public</md-icon>
+                    <md-icon class="list-item-private-icon" md-font-library="material-icons"
+                             ng-if="account.isAuthenticated && item.isPrivate">lock
+                    </md-icon>
+                    <md-icon class="list-item-public-icon" md-font-library="material-icons"
+                             ng-if="account.isAuthenticated && !item.isPrivate">public
+                    </md-icon>
                     <div class="md-list-item-text" layout="column">
                         <h3>{{item.name}}</h3>
                         <p>{{item.author.fullname}}</p>

@@ -25,9 +25,13 @@ html(ng-app="Moonshiner")
               md-menu-item
                 md-button
                   md-icon(md-font-library="material-icons") local_library
-                  span My recipies/setups
+                  span My recipies
               md-menu-item
-                md-button
+                md-button(disabled)
+                  md-icon(md-font-library="material-icons") storage
+                  span My setups
+              md-menu-item
+                md-button(disabled)
                   md-icon(md-font-library="material-icons") settings
                   span Preferences
               md-divider

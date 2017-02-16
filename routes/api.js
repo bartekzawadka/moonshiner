@@ -4,6 +4,7 @@
 var express = require('express');
 var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
+var mongoose = require('mongoose');
 var router = express.Router();
 var path = require('path');
 var queryHelper = require('./helpers/query-helper');
@@ -21,28 +22,28 @@ var sendContentInaccessible = function (res) {
     }));
 };
 
-var getUserId = function (req, callback) {
-    var userId = undefined;
-    if (req.user && req.user._id) {
-        callback(req.user._id);
-    }
-    else if (req.headers && req.headers.authorization) {
-        try {
-            var token = req.headers.authorization.replace('Bearer ', '');
-            jwt.verify(token, config.tokenSecret, function (err, decoded) {
-                if (err || !decoded) {
-                    callback();
-                    return;
-                }
-                callback(decoded._id);
-            });
-        } catch (Exception) {
-            callback();
-        }
-    }else{
-        callback();
-    }
-};
+// var getUserId = function (req, callback) {
+//     var userId = undefined;
+//     if (req.user && req.user._id) {
+//         callback(req.user._id);
+//     }
+//     else if (req.headers && req.headers.authorization) {
+//         try {
+//             var token = req.headers.authorization.replace('Bearer ', '');
+//             jwt.verify(token, config.tokenSecret, function (err, decoded) {
+//                 if (err || !decoded) {
+//                     callback();
+//                     return;
+//                 }
+//                 callback(decoded._id);
+//             });
+//         } catch (Exception) {
+//             callback();
+//         }
+//     }else{
+//         callback();
+//     }
+// };
 
 router.post('/liquid/comment', jwtConfig, function (req, res) {
     var data = req.body;
@@ -168,117 +169,59 @@ router.get('/liquid/:id', function (req, res) {
     });
 });
 
+router.get('/liquids/user/:id', function(req, res){
+
+    if(!req.params.id){
+                    res.writeHead(500, {"Content-Type": "application/json"});
+                    res.end(JSON.stringify({
+                        success: false,
+                        error: "User ID was not provided"
+                    }));
+    }
+
+    queryHelper.getItemsList(req, res, Liquid, function(match){
+            if (!match || match == null || (Object.keys(match).length === 0 && match.constructor === Object)) {
+                match = {
+                    "$and": [
+                        {"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}}
+                    ]
+                }
+            }else{
+                if(!match["$and"]){
+                    match["$and"] = [];
+                }
+                match["$and"].push({"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}});
+            }
+            return match;
+    }, function(sort){
+        if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
+            sort = {
+                "nameLower": 1
+            }
+        }
+        return sort;
+    });
+});
+
 router.get('/liquids', function (req, res) {
 
-    var urlParsed = queryHelper.resolveUrlFilterSort(req.url);
-
-    var sort = queryHelper.buildMongoSortQuery(urlParsed);
-    if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
-        sort = {
-            "nameLower": 1
+    queryHelper.getItemsList(req, res, Liquid, function(match, userId){
+            if (!match || match == null || (Object.keys(match).length === 0 && match.constructor === Object)) {
+                match = {
+                    "$and": [
+                        {"isPrivate": false}
+                    ]
+                };
+            }
+            return match;
+    }, function (sort) {
+        if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
+            sort = {
+                "nameLower": 1
+            }
         }
-    }
-
-    var userId = undefined;
-
-    getUserId(req, function (id) {
-        userId = id;
-        executeQuery();
+        return sort;
     });
-
-    function executeQuery() {
-        var match = queryHelper.buildMongoFilterQuery(urlParsed, userId);
-        if (!match || (Object.keys(match).length === 0 && match.constructor === Object)) {
-            match = {
-                "$and": [
-                    {"isPrivate": false}
-                ]
-            }
-        }
-
-        var query = [
-            {
-                "$unwind": {
-                    "path": "$ratings",
-                    "preserveNullAndEmptyArrays": true
-                }
-            },
-            {
-                "$unwind": {
-                    "path": "$aromas",
-                    "preserveNullAndEmptyArrays": true
-                }
-            },
-            {
-                "$unwind": {
-                    "path": "$accessories",
-                    "preserveNullAndEmptyArrays": true
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "Users",
-                    "localField": "author",
-                    "foreignField": "_id",
-                    "as": "author"
-                }
-            },
-            {
-                "$unwind": {
-                    "path": "$author",
-                    "preserveNullAndEmptyArrays": true
-                }
-            },
-            {
-                "$match": match
-            },
-            {
-                "$group": {
-                    "_id": "$_id",
-                    "ratingsCount": {
-                        "$sum": {
-                            "$cond": [{"$gt": ["$ratings", null]}, 1, 0]
-                        }
-                    },
-                    "ratingAverage": {"$avg": {"$ifNull": ["$ratings.rating", 0]}},
-                    "author": {"$first": '$author'},
-                    "name": {"$first": '$name'},
-                    "lastUpdate": {"$first": '$lastUpdate'},
-                    "isPrivate": {"$first": '$isPrivate'}
-                }
-            },
-            {
-                "$project": {
-                    "_id": 1,
-                    "ratingsCount": 1,
-                    "ratingAverage": 1,
-                    "name": 1,
-                    "nameLower": {"$toLower": "$name"},
-                    "lastUpdate": 1,
-                    "isPrivate": 1,
-                    "author._id": 1,
-                    "author.username": 1,
-                    "author.fullname": 1
-                }
-            }, {
-                "$sort": sort
-            }
-        ];
-
-        Liquid.aggregate(query).exec(function (error, data) {
-            if (error) {
-                res.writeHead(500, {"Content-Type": "application/json"});
-                res.end(JSON.stringify({
-                    success: false,
-                    error: error
-                }));
-            } else {
-
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(data));
-            }
-        });
-    }
 });
 
 module.exports = router;
