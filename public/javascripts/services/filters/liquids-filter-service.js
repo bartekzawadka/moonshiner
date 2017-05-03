@@ -7,6 +7,7 @@ angular.module('Moonshiner').factory('LiquidsFilterService', function LiquidsFil
         return {
             phrase: null,
             privateOnly: false,
+            onlyMyItems: false,
             privateOnlyOptions: [
                 {value: null, title: "All"},
                 {value: false, title: "Public"},

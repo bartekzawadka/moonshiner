@@ -22,28 +22,28 @@ var sendContentInaccessible = function (res) {
     }));
 };
 
-// var getUserId = function (req, callback) {
-//     var userId = undefined;
-//     if (req.user && req.user._id) {
-//         callback(req.user._id);
-//     }
-//     else if (req.headers && req.headers.authorization) {
-//         try {
-//             var token = req.headers.authorization.replace('Bearer ', '');
-//             jwt.verify(token, config.tokenSecret, function (err, decoded) {
-//                 if (err || !decoded) {
-//                     callback();
-//                     return;
-//                 }
-//                 callback(decoded._id);
-//             });
-//         } catch (Exception) {
-//             callback();
-//         }
-//     }else{
-//         callback();
-//     }
-// };
+var getUserId = function (req, callback) {
+    var userId = undefined;
+    if (req.user && req.user._id) {
+        callback(req.user._id);
+    }
+    else if (req.headers && req.headers.authorization) {
+        try {
+            var token = req.headers.authorization.replace('Bearer ', '');
+            jwt.verify(token, config.tokenSecret, function (err, decoded) {
+                if (err || !decoded) {
+                    callback();
+                    return;
+                }
+                callback(decoded._id);
+            });
+        } catch (Exception) {
+            callback();
+        }
+    }else{
+        callback();
+    }
+};
 
 router.post('/liquid/comment', jwtConfig, function (req, res) {
     var data = req.body;
@@ -156,7 +156,7 @@ router.get('/liquid/:id', function (req, res) {
         } else {
 
             getUserId(req, function (userId) {
-                if (!userId || (userId && data && data.author && userId != data.author._id)) {
+                if (!userId || (userId && data && data.author && userId !== data.author._id)) {
                     if(data.isPrivate) {
                         sendContentInaccessible(res);
                         return;
@@ -169,7 +169,7 @@ router.get('/liquid/:id', function (req, res) {
     });
 });
 
-router.get('/liquids/user/:id', function(req, res){
+router.get('/liquids/user/:id', jwtConfig, function(req, res){
 
     if(!req.params.id){
                     res.writeHead(500, {"Content-Type": "application/json"});
@@ -206,7 +206,7 @@ router.get('/liquids/user/:id', function(req, res){
 router.get('/liquids', function (req, res) {
 
     queryHelper.getItemsList(req, res, Liquid, function(match, userId){
-            if (!match || match == null || (Object.keys(match).length === 0 && match.constructor === Object)) {
+            if (!match || match === null || (Object.keys(match).length === 0 && match.constructor === Object)) {
                 match = {
                     "$and": [
                         {"isPrivate": false}

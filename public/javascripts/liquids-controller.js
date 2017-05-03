@@ -1,23 +1,32 @@
 /**
  * Created by barte_000 on 2016-12-29.
  */
-function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterService){
+function LiquidsController($scope, $route, $location, LiquidsProvider, LiquidsFilterService, AuthService){
 
     $scope.liquids = [];
     $scope.filterVisible = false;
     $scope.filterIcon = "expand_more";
 
+    $scope.userOnly = $route.current.$$route.userOnly;
+    if($scope.userOnly === true && !AuthService.isLoggedIn()){
+        $scope.userOnly = false;
+    }
 
     $scope.clearFilter = function(openPan){
         $scope.filter = LiquidsFilterService.resetFilter();
-        if(openPan != undefined && openPan != null)
+        if(openPan !== undefined && openPan !== null)
             $scope.toggleFilterPan(openPan);
 
         $scope.getLiquids();
     };
 
+    $scope.toggleMyItems = function(){
+        $scope.filter.onlyMyItems = !$scope.filter.onlyMyItems;
+        $scope.getLiquids();
+    };
+
     $scope.toggleFilterPan = function(openPan){
-        if(openPan == undefined || openPan == null || openPan === 'undefined')
+        if(openPan === undefined || openPan === null || openPan === 'undefined')
             $scope.filterVisible = !$scope.filterVisible;
         else
             $scope.filterVisible = openPan;
@@ -51,11 +60,12 @@ function LiquidsController($scope, $location, LiquidsProvider, LiquidsFilterServ
     };
 
     $scope.escapePressed = function(event){
-        if(event && event.keyCode == 27){
+        if(event && event.keyCode === 27){
             $scope.toggleFilterPan(false);
         }
     };
 
     $scope.filter = LiquidsFilterService.getFilter();
+    $scope.filter.onlyMyItems = $scope.userOnly;
     $scope.getLiquids();
 }

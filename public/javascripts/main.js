@@ -9,6 +9,11 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
                 templateUrl: '/partials/liquids.html',
                 controller: LiquidsController
             })
+            .when('/liquids/user', {
+                templateUrl: '/partials/liquids.html',
+                controller: LiquidsController,
+                userOnly: true
+            })
             .when('/liquids/liquid', {
                 templateUrl: '/partials/liquid.html',
                 controller: LiquidController

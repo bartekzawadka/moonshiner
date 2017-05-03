@@ -42,22 +42,74 @@ angular.module('Moonshiner').factory('LiquidsProvider', function LiquidsProvider
     }
 
     return {
+        // getUserLiquids: function(filter, callback){
+        //     var deferred = $q.defer(),
+        //         cb = callback || angular.noop;
+        //
+        //     $http({
+        //         url: '/api/liquids/user/'+AuthService.getUser().user._id,
+        //         method: 'GET',
+        //         params: buildFilter(filter)
+        //     }).then(function(res){
+        //         if(!res){
+        //             cb(null, "No data received");
+        //             deferred.reject("No data received");
+        //             return deferred.promise;
+        //         }
+        //
+        //         if(res.status && res.status !== 200){
+        //             console.log("Error occurred");
+        //             var error = "HTTP request resulted with code "+res.status;
+        //             cb(null, error);
+        //             deferred.reject(error);
+        //         }
+        //
+        //         cb(res.data, null);
+        //         deferred.resolve(res.data);
+        //     }, function(e){
+        //         var error = "";
+        //         if(e.data){
+        //             if(e.data.error)
+        //                 error = e.data.error;
+        //             else
+        //                 error = e.data;
+        //         }
+        //
+        //         cb(null, error);
+        //         deferred.reject(error);
+        //     });
+        //
+        //
+        //     return deferred.promise;
+        // },
+
         getLiquids: function(filter, callback){
             var deferred = $q.defer(),
                 cb = callback || angular.noop;
 
-            $http({
-                url: '/api/liquids',
+            var requestData = {
                 method: 'GET',
                 params: buildFilter(filter)
-            }).then(function(res){
+            };
+            if(filter.onlyMyItems){
+                var userInfo = AuthService.getUser();
+                if(userInfo && userInfo.user && userInfo.user._id){
+                    requestData.url = '/api/liquids/user/'+AuthService.getUser().user._id;
+                }else{
+                    requestData.url = '/api/liquids';
+                }
+            }else{
+                requestData.url = '/api/liquids';
+            }
+
+            $http(requestData).then(function(res){
                 if(!res){
                     cb(null, "No data received");
                     deferred.reject("No data received");
                     return deferred.promise;
                 }
 
-                if(res.status && res.status != 200){
+                if(res.status && res.status !== 200){
                     console.log("Error occurred");
                     var error = "HTTP request resulted with code "+res.status;
                     cb(null, error);

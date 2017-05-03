@@ -15,12 +15,11 @@ angular.module('Moonshiner').factory('AuthInterceptor', function AuthInterceptor
 
            var deferred = $q.defer();
 
-           if(response.status == 401) {
+           if(response.status === 401) {
                dialogService.showSignIn(null, function(){
-                   //return $q.reject(response);
                    deferred.reject(response);
                });
-           }else if(response.status != 422){
+           }else if(response.status !== 422){
                var data = {
                    title: response.statusText+" ("+response.status+")"
                };
@@ -32,11 +31,9 @@ angular.module('Moonshiner').factory('AuthInterceptor', function AuthInterceptor
                    }
                }
                dialogService.showError(null, data, function(){
-                   //return $q.reject(response);
                    deferred.reject(response);
                });
            }else{
-               //return $q.reject(response);
                deferred.reject(response);
            }
 

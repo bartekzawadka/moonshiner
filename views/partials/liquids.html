@@ -8,12 +8,25 @@
                 </md-icon>
                 New recipie
             </md-button>
-            <md-button class="md-raised" href="" ng-if="account.isAuthenticated">
+            <md-button class="md-raised" ng-click="toggleMyItems()" ng-class="{'selected': filter.onlyMyItems}"
+                       ng-if="account.isAuthenticated">
                 <md-icon md-font-library="material-icons">
                     local_library
                 </md-icon>
                 <span>My recipies</span>
             </md-button>
+            <!--<md-button class="md-raised" href="liquids/user" ng-if="account.isAuthenticated && userOnly">-->
+                <!--<md-icon md-font-library="material-icons">-->
+                    <!--star-->
+                <!--</md-icon>-->
+                <!--<span>My ratings</span>-->
+            <!--</md-button>-->
+            <!--<md-button class="md-raised" href="liquids/user" ng-if="account.isAuthenticated && userOnly">-->
+                <!--<md-icon md-font-library="material-icons">-->
+                    <!--comment-->
+                <!--</md-icon>-->
+                <!--<span>My comments</span>-->
+            <!--</md-button>-->
         </div>
         <span flex></span>
         <md-input-container layout-align="center center">
@@ -53,21 +66,19 @@
                                        md-open-on-focus></md-datepicker>
                     </div>
                 </div>
-                <!--<span flex="5"></span>-->
-                <!--<div layout="row" layout-align="center center" ng-if="account.isAuthenticated">-->
-                <!--<div layout-gt-xs="row" ng-if="account.isAuthenticated">-->
-                <!--<md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">-->
-                <!--<label>Private/public</label>-->
-                <!--<md-select ng-model="filter.privateOnly">-->
-                <!--<md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">{{item.title}}</md-option>-->
-                <!--</md-select>-->
-                <!--</md-input-container>-->
-                <!--</div>-->
-                <!--<span flex="5"></span>-->
-                <!--<md-switch class="md-queen-blue" md-no-ink ng-model="filter.myOnly" ng-if="account.isAuthenticated">-->
-                <!--<span>Only my items</span>-->
-                <!--</md-switch>-->
-                <!--</div>-->
+                <span flex="5"></span>
+                <div layout="row" layout-align="center center" ng-if="account.isAuthenticated && userOnly">
+                    <div layout-gt-xs="row" ng-if="account.isAuthenticated">
+                        <md-input-container class="md-input-container-thin md-queen-blue no-errors-spacer">
+                            <label>Private/public</label>
+                            <md-select ng-model="filter.privateOnly">
+                                <md-option ng-repeat="item in filter.privateOnlyOptions" ng-value="item.value">
+                                    {{item.title}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
             </div>
             <md-divider></md-divider>
             <div layout="row" flex layout-align="center center">

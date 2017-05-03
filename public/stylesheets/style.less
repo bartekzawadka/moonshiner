@@ -319,3 +319,8 @@ md-icon.list-item-public-icon {
 .md-button.md-raised, .md-button.md-raised:not([disabled]) md-icon {
   color: @grey;
 }
+
+.md-button.md-raised.selected, .md-button.md-raised:not([disabled]).selected {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26), 0 2px 5px 0 rgba(0,0,0,.26) inset;
+  background-color: @grey + 100;
+}

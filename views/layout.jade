@@ -23,7 +23,11 @@ html(ng-app="Moonshiner")
               h4(class="user-info") {{account.user.fullname}}
             md-menu-content(width="4")
               md-menu-item
-                md-button
+                md-button(disabled)
+                  md-icon(md-font-library="material-icons") account_circle
+                  span My profile
+              md-menu-item
+                md-button(ng-href="liquids/user")
                   md-icon(md-font-library="material-icons") local_library
                   span My recipies
               md-menu-item

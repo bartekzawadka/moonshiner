@@ -88,10 +88,10 @@ function buildMongoFilterQuery(urlParsed, userId){
         match["$and"].push({"lastUpdate": lastUpdate});
     }
 
-    if(urlParsed.filter.privateOnly == true && userId){
+    if(urlParsed.filter.privateOnly === true && userId){
         match["$and"].push({"isPrivate": true});
         match["$and"].push({"author._id": {"$in": [mongoose.Types.ObjectId(userId)]}});
-    } else if((urlParsed.filter.privateOnly == undefined || urlParsed.filter.privateOnly == null || urlParsed.filter.privateOnly == 'undefined') && userId){
+    } else if((urlParsed.filter.privateOnly === undefined || urlParsed.filter.privateOnly === null || urlParsed.filter.privateOnly === 'undefined') && userId){
         match["$and"].push({
             "$or": [{
                 "$and": [
