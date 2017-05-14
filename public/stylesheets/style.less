@@ -8,6 +8,10 @@
 @app-yellow: #F0C808;
 @grey: #666;
 
+img[src="_"] {
+  display: none !important;
+}
+
 // Social
 
 .fb-color {
@@ -324,3 +328,41 @@ md-icon.list-item-public-icon {
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.26), 0 2px 5px 0 rgba(0,0,0,.26) inset;
   background-color: @grey + 100;
 }
+
+.file-input {
+  display: none;
+}
+
+// Image upload
+
+.margin-sides-10{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.img-upload-base {
+  .margin-sides-10;
+  border: 1px solid #E4E4E4;
+  overflow: hidden;
+}
+
+div.img-upload {
+  .img-upload-base;
+  width: 350px;
+  height: 245px;
+}
+
+div.img-upload-preview {
+  .img-upload-base;
+  width: 245px;
+  height: 245px;
+}
+
+.md-button.md-raised.warn-text:not([disabled]){
+  color: rgb(255,87,34);
+}
+.md-button.md-raised.warn-text:not([disabled]) md-icon {
+  color: rgb(255,87,34);
+}
+
+//.md-button.md-raised.warn-text:not([disabled]):hover

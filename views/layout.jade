@@ -4,6 +4,7 @@ html(ng-app="Moonshiner")
     base(href="/")
     meta(charset="UTF-8")
     title Moonshiner
+    link(rel='stylesheet', href='/modules/ng-img-crop/compile/unminified/ng-img-crop.css')
     link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
 
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -11,7 +12,7 @@ html(ng-app="Moonshiner")
     link(rel='stylesheet', href="/modules/font-awesome/css/font-awesome.min.css")
     link(rel='stylesheet', href='/modules/angular-input-stars/angular-input-stars.css')
 
-  body(ng-controller="MainController")
+  body(ng-controller='MainController')
     div(class="header md-whiteframe-3dp")
       img(src="images/grandpa.png" width="90" style="padding-left: 10px; padding-top: 10px; padding-bottom: 20px;")
       img(src="images/logo.png" width="380" style="padding-bottom: 30px;")
@@ -35,7 +36,7 @@ html(ng-app="Moonshiner")
                   md-icon(md-font-library="material-icons") storage
                   span My setups
               md-menu-item
-                md-button(disabled)
+                md-button(ng-href="account")
                   md-icon(md-font-library="material-icons") settings
                   span Preferences
               md-divider
@@ -62,7 +63,9 @@ html(ng-app="Moonshiner")
 
     script(src='/modules/jquery/dist/jquery.min.js')
     script(src='/modules/angular/angular.js')
+    script(src='/modules/ng-img-crop/compile/unminified/ng-img-crop.js')
     script(src='/modules/angular-material/angular-material.js')
+
     script(src='/modules/angular-animate/angular-animate.min.js')
     script(src='/modules/angular-aria/angular-aria.min.js')
     script(src='/modules/angular-route/angular-route.min.js')
@@ -70,6 +73,7 @@ html(ng-app="Moonshiner")
     script(src='/modules/angular-input-stars/angular-input-stars.js')
     script(src='/modules/ng-facebook/ngFacebook.js')
     script(src='/modules/moment/min/moment.min.js')
+    script(src='/modules/ng-flow/dist/ng-flow-standalone.min.js')
 
     script(src='/javascripts/main.js')
     script(src='/javascripts/account/logging-controller.js')
@@ -77,6 +81,7 @@ html(ng-app="Moonshiner")
     script(src='/javascripts/liquid-controller.js')
     script(src='/javascripts/liquids-controller.js')
     script(src='/javascripts/setups-controller.js')
+    script(src='/javascripts/account-controller.js')
     script(src='/javascripts/error-info-controller.js')
     script(src='/javascripts/services/security/auth-service.js')
     script(src='/javascripts/services/security/auth-interceptor.js')

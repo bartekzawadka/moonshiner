@@ -1,8 +1,8 @@
 /**
  * Created by barte_000 on 2016-12-26.
  */
-angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars','ngFacebook' ])
-    .config(function ($routeProvider, $locationProvider, $facebookProvider, $httpProvider) {
+angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-input-stars','ngFacebook', 'flow', 'ngImgCrop' ])
+    .config(function ($routeProvider, $locationProvider, $facebookProvider, $httpProvider, flowFactoryProvider) {
         $locationProvider.html5Mode(true);
         $routeProvider
             .when('/liquids', {
@@ -26,10 +26,28 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
                 templateUrl: '/partials/setups.html',
                 controller: SetupsController
             })
+            .when('/account', {
+                templateUrl: '/partials/account.html',
+                //controller: AccountController
+            })
             .otherwise({redirectTo: '/liquids'});
 
         $facebookProvider.setAppId('1618843905092197');
         $httpProvider.interceptors.push('AuthInterceptor');
+
+
+        // flowFactoryProvider.defaults = {
+        //     target: '',
+        //     permanentErrors: [500, 501],
+        //     maxChunkRetries: 1,
+        //     chunkRetryInterval: 5000,
+        //     simultaneousUploads: 1
+        // };
+        // flowFactoryProvider.on('catchAll', function (event) {
+        //     console.log('catchAll', arguments);
+        // });
+        // // Can be used with different implementations of Flow.js
+        // flowFactoryProvider.factory = fustyFlowFactory;
 
     }).run(function ($rootScope) {
     // Load the facebook SDK asynchronously
