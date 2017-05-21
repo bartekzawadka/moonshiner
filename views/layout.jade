@@ -20,7 +20,8 @@ html(ng-app="Moonshiner")
         div(class="header-item" ng-if="account.isAuthenticated")
           md-menu(md-position-mode="target bottom")
             md-list-item(ng-click="openMenu($mdMenu, $event)")
-              img(ng-src="images/user.jpg" class="md-avatar")
+              img(ng-src="images/user.jpg" class="md-avatar" ng-if="!account.user.picture")
+              img(ng-src="{{account.user.picture}}" class="md-avatar" ng-if="account.user.picture")
               h4(class="user-info") {{account.user.fullname}}
             md-menu-content(width="4")
               md-menu-item

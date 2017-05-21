@@ -45,4 +45,7 @@ jspm_packages
 # Main CSS file - generated from LESS
 
 public/stylesheets/style.css
-/public/stylesheets/style.css
+
+# Config
+
+config/.config.json

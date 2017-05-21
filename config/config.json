@@ -5,5 +5,9 @@
     "host": "localhost",
     "database": "moonshiner"
   },
-  "tokenSecret": "1234"
+  "tokenSecret": "1234",
+  "facebook": {
+    "id": "161",
+    "secret": "aaa"
+  }
 }

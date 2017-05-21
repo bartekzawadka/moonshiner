@@ -29,14 +29,15 @@ angular.module('Moonshiner').controller('LoggingController', function ($scope, $
 
     $scope.loginFacebook = function(){
         $facebook.login().then(function(response){
-            $scope.me();
+            $scope.me($facebook.getAuthResponse());
         }, function(resp){
             console.log("Error!", resp);
         });
     };
 
-    $scope.me = function(){
+    $scope.me = function(status){
         $facebook.api('/me', {fields: 'id, name, email'}).then(function(resp){
+            resp.auth = status;
             AuthService.loginFacebook(resp).then(function(){
                 $location.path('/');
                 $mdDialog.cancel();
