@@ -16,9 +16,11 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
 
     function getUserFromSessionStorage(){
         var token = $window.sessionStorage.token;
+        var picture = $window.sessionStorage.picture;
         if(token && token !== 'undefined'){
             var encodedProfile = token.split('.')[1];
             var profile = JSON.parse(urlBase64Decode(encodedProfile));
+            profile.picture = picture;
             return {
                 user: profile,
                 isAuthenticated: true
@@ -85,6 +87,7 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
             $http.post('/user/login/facebook', user).then(function(data){
 
                 $window.sessionStorage.token = data.data.token;
+                $window.sessionStorage.picture = data.data.picture;
 
                 setAccountToDefault();
 
@@ -92,6 +95,7 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
                 var encodedProfile = data.data.token.split('.')[1];
                 var profile = JSON.parse(urlBase64Decode(encodedProfile));
                 $rootScope.account.user = profile;
+                $rootScope.account.user.picture = data.data.picture;
 
                 cb();
                 deferred.resolve(profile);

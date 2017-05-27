@@ -28,7 +28,7 @@ angular.module('Moonshiner', ['ngMaterial', 'ngRoute', 'ngMessages', 'angular-in
             })
             .when('/account', {
                 templateUrl: '/partials/account.html',
-                //controller: AccountController
+                controller: AccountController
             })
             .otherwise({redirectTo: '/liquids'});
 

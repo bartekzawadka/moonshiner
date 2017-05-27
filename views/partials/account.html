@@ -1,0 +1,70 @@
+<div class="content">
+    <div layout="column" ng-cloak class="md-inline-form">
+        <div>
+            <form name="accountForm">
+                <section>
+                    <div class="label">Account preferences</div>
+                    <div flex ng-show="!showAvatarEdit">
+                        <md-subheader class="bold">
+                            Profile picture
+                        </md-subheader>
+                        <div layout="column" layout-align="center center">
+                            <div>
+                                <img ng-src="{{account.picture}}"/>
+                            </div>
+
+                            <div>
+                                <md-button class="md-primary md-raised form-button" ng-click="changeAvatar()">
+                                    <md-icon md-font-library="material-icons">
+                                        edit
+                                    </md-icon>
+                                    Edit
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="showAvatarEdit">
+                        <avatar-crop heading="Edit profile picture" image="{{avatarToEdit}}"
+                                     output-image="finalAvatar" on-cancelled="avatarCancelled()"></avatar-crop>
+                    </div>
+
+                    <md-input-container class="md-block">
+                        <label>Display name</label>
+                        <input required name="lDisplayname" ng-model="account.fullname">
+                        <div ng-messages="liquidForm.lDisplayname.$error">
+                            <div ng-message="required">This field is required.</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container class="md-block">
+                        <label>User name</label>
+                        <input required name="lUsername" ng-model="account.username" ng-disabled="true">
+                    </md-input-container>
+
+                </section>
+
+                <section>
+                    <md-divider>
+                    </md-divider>
+                    <div layout="row">
+                        <md-button class="md-warn" ng-href="/liquids">
+                            <md-icon md-font-library="material-icons">
+                                clear
+                            </md-icon>
+                            <span>Cancel</span>
+                        </md-button><!--ng-click="showConfirm($event)"-->
+                        <span flex></span>
+                        <md-button class="md-warn md-raised" ng-disabled="accountForm.$invalid"
+                                   ng-click="saveChanges()">
+                            <md-icon md-font-library="material-icons">
+                                save
+                            </md-icon>
+                            <span>Save</span>
+                        </md-button>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </div>
+</div>

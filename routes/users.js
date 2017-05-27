@@ -1,4 +1,5 @@
 var express = require('express');
+var expressJwt = require('express-jwt');
 var router = express.Router();
 var passport = require('passport');
 var Users = require('../models/user');
@@ -6,6 +7,71 @@ var jwt = require('jsonwebtoken');
 var path = require('path');
 var config = require(path.join(__dirname, '..', 'config', 'config.json'));
 var fbUtils = require('./helpers/facebook-utils');
+var queryHelper = require('./helpers/query-helper');
+
+var jwtConfig = expressJwt({secret: config.tokenSecret, decode: jwt.decode});
+
+router.get('/account/:id', function(req, res, next){
+    if (!req.params || !req.params.id) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({
+            success: false,
+            error: "Item ID was not specified or is invalid"
+        }));
+        return;
+    }
+
+    Users.findById(req.params.id, {'username': 1, 'fullname': 1, 'picture': 1}, function(e, userData){
+        if(e){
+            res.writeHead(500, {"Content-Type": "application/json"});
+            res.end(JSON.stringify({error: "Unable to get user account data: " + e}));
+            return;
+        }
+
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(userData));
+    });
+});
+
+router.post('/account', jwtConfig, function(req, res, next){
+   queryHelper.getUserId(req, function(id){
+      if(!id){
+          res.writeHead(401, {"Content-Type": "application/json"});
+          res.end(JSON.stringify({error: "Unable to save user settings. Invalid user ID"}));
+          return;
+      }
+
+      var userNewInfo = req.body;
+
+      Users.findById(id, function(error, data){
+          if(error){
+              res.writeHead(500, {"Content-Type": "application/json"});
+              res.end(JSON.stringify({error: "Unable to save user settings - unable to find user data: "+error}));
+              return;
+          }
+
+          data.fullname = userNewInfo.fullname;
+          data.username = userNewInfo.username;
+          if(userNewInfo.picture){
+              data.picture = userNewInfo.picture;
+          }
+          if(userNewInfo.password){
+              data.password = userNewInfo.password;
+          }
+
+          Users.findOneAndUpdate({_id: id}, data, function(e, result){
+             if(e){
+                 res.writeHead(500, {"Content-Type": "application/json"});
+                 res.end(JSON.stringify({error: "Unable to save user settings: "+e}));
+                 return;
+             }
+
+              res.writeHead(200, {"Content-Type": "application/json"});
+              res.end(JSON.stringify({success: true}));
+          });
+      });
+   });
+});
 
 router.post('/login/facebook', function (req, res, next) {
     Users.findOne({
@@ -67,7 +133,12 @@ router.post('/login/facebook', function (req, res, next) {
                     }
 
                 } else {
-                    userLocal.facebook = req.body;
+                    //userLocal.facebook = req.body;
+                    userLocal.facebook = {
+                        id: req.body.id,
+                        name: req.body.name,
+                        email: req.body.email
+                    };
                     Users.findOneAndUpdate({_id: userLocal._id}, userLocal).exec(function (e, newLocal) {
                         if (e) {
                             res.writeHead(500, {"Content-Type": "application/json"});
@@ -95,7 +166,7 @@ router.post('/login/facebook', function (req, res, next) {
                     _id: user._id,
                     username: user.username,
                     fullname: user.fullname,
-                    picture: user.picture
+                    //picture: user.picture
                 };
 
                 if(img){
@@ -110,7 +181,7 @@ router.post('/login/facebook', function (req, res, next) {
                 }else{
                     var token = jwt.sign(sendUser, config.tokenSecret, {expiresIn: 60 * 60 * 5});
                     res.writeHead(200, {"Content-Type": "application/json"});
-                    res.end(JSON.stringify({token: token}));
+                    res.end(JSON.stringify({token: token, picture: user.picture}));
                 }
             };
 

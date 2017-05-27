@@ -5,13 +5,13 @@
             {{heading}}
         </md-subheader>
         <div flex layout-align="center center" layout="row">
-            <div ng-show="!$flow.files.length" class="margin-sides-10">
+            <div ng-show="!$flow.files.length && !image" class="margin-sides-10">
                 <img ng-src="images/user.jpg" />
             </div>
-            <div ng-show="$flow.files.length" class="img-upload">
+            <div ng-show="$flow.files.length || image" class="img-upload">
                 <img-crop image="image" result-image="croppedImage" result-image-size="245" area-type="square" on-change="croppedImageChanged($dataURI)"></img-crop>
             </div>
-            <div ng-show="$flow.files.length" class="img-upload-preview">
+            <div ng-show="$flow.files.length || image" class="img-upload-preview">
                 <img ng-src="{{croppedImage}}" />
             </div>
         </div>
@@ -40,6 +40,13 @@
             </md-button>
             <input class="file-input" id="cancel" ng-click="removeImage()"
                    ng-show="$flow.files.length">
+
+            <md-button class="md-raised" ng-click="cancel()">
+                <md-icon md-font-library="material-icons">
+                    clear
+                </md-icon>
+                Cancel
+            </md-button>
         </div>
         <!--<p>-->
         <!--Only PNG,GIF,JPG,JPEG files allowed.-->
