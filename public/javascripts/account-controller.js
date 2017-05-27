@@ -28,6 +28,7 @@ function AccountController($scope, $http, $location, AuthService){
             url: '/user/account',
             data: $scope.account
         }).then(function(res){
+            AuthService.updateUserInfo(res.data.auth);
             loadProfile();
         }, function(e){
             console.log(e);

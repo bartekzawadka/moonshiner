@@ -8,6 +8,7 @@ var path = require('path');
 var config = require(path.join(__dirname, '..', 'config', 'config.json'));
 var fbUtils = require('./helpers/facebook-utils');
 var queryHelper = require('./helpers/query-helper');
+var authHelper = require('./helpers/auth');
 
 var jwtConfig = expressJwt({secret: config.tokenSecret, decode: jwt.decode});
 
@@ -59,15 +60,26 @@ router.post('/account', jwtConfig, function(req, res, next){
               data.password = userNewInfo.password;
           }
 
-          Users.findOneAndUpdate({_id: id}, data, function(e, result){
+          Users.findOneAndUpdate({_id: id}, data, {new: true}, function(e, result){
              if(e){
                  res.writeHead(500, {"Content-Type": "application/json"});
                  res.end(JSON.stringify({error: "Unable to save user settings: "+e}));
                  return;
              }
 
+             var userData = {
+                 _id: result._id,
+                 username: result.username,
+                 fullname: result.fullname
+             };
+
+             var sendData = {
+                 token: authHelper.getToken(userData),
+                 picture: result.picture
+             };
+
               res.writeHead(200, {"Content-Type": "application/json"});
-              res.end(JSON.stringify({success: true}));
+              res.end(JSON.stringify({success: true, auth: sendData}));
           });
       });
    });
@@ -116,13 +128,17 @@ router.post('/login/facebook', function (req, res, next) {
                                 username: newUser.username,
                                 fullname: newUser.fullname
                             };
-                            if(img){
-                                sendUser.picture = img;
-                            }
 
                             var token = jwt.sign(sendUser, config.tokenSecret, {expiresIn: 60 * 60 * 5});
+
+                            var dataToSend = {
+                                token: token
+                            };
+                            if(newUser.picture){
+                                dataToSend.picture = newUser.picture;
+                            }
                             res.writeHead(200, {"Content-Type": "application/json"});
-                            return res.end(JSON.stringify({token: token}));
+                            return res.end(JSON.stringify(dataToSend));
                         });
                     };
 
@@ -133,7 +149,6 @@ router.post('/login/facebook', function (req, res, next) {
                     }
 
                 } else {
-                    //userLocal.facebook = req.body;
                     userLocal.facebook = {
                         id: req.body.id,
                         name: req.body.name,
@@ -149,14 +164,13 @@ router.post('/login/facebook', function (req, res, next) {
                         var sendUser = {
                             _id: newLocal._id,
                             username: newLocal.username,
-                            fullname: newLocal.fullname,
-                            picture: newLocal.picture
+                            fullname: newLocal.fullname
                         };
 
                         var token = jwt.sign(sendUser, config.tokenSecret, {expiresIn: 60 * 60 * 5});
 
                         res.writeHead(200, {"Content-Type": "application/json"});
-                        return res.end(JSON.stringify({token: token}));
+                        return res.end(JSON.stringify({token: token, picture: newLocal.picture}));
                     });
                 }
             });
@@ -165,18 +179,16 @@ router.post('/login/facebook', function (req, res, next) {
                 var sendUser = {
                     _id: user._id,
                     username: user.username,
-                    fullname: user.fullname,
-                    //picture: user.picture
+                    fullname: user.fullname
                 };
 
                 if(img){
                     user.picture = img;
-                    sendUser.picture = img;
 
                     Users.findOneAndUpdate({_id: user._id}, user, function(updateError, updateData){
                         var token = jwt.sign(sendUser, config.tokenSecret, {expiresIn: 60 * 60 * 5});
                         res.writeHead(200, {"Content-Type": "application/json"});
-                        res.end(JSON.stringify({token: token}));
+                        res.end(JSON.stringify({token: token, picture: img}));
                     });
                 }else{
                     var token = jwt.sign(sendUser, config.tokenSecret, {expiresIn: 60 * 60 * 5});

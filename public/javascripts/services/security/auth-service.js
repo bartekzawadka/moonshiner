@@ -124,6 +124,8 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
 
             $http.post('/user/register', user).then(function(data){
                 $window.sessionStorage.token = data.data.token;
+                if(data.data.picture)
+                    $window.sessionStorage.picture = data.data.picture;
 
                 setAccountToDefault();
 
@@ -170,6 +172,23 @@ angular.module('Moonshiner').factory('AuthService', function AuthService($window
 
         isLoggedIn: function() {
             return $rootScope.account && $rootScope.account.isAuthenticated; 
+        },
+
+        updateUserInfo: function(data){
+            if(!data){
+                return;
+            }
+
+            if(data.token){
+                $window.sessionStorage.token = data.token;
+                $rootScope.account.isAuthenticated = true;
+                var encodedProfile = data.token.split('.')[1];
+                $rootScope.account.user = JSON.parse(urlBase64Decode(encodedProfile));
+            }
+            if(data.picture){
+                $rootScope.account.user.picture = data.picture;
+                $window.sessionStorage.picture = data.picture;
+            }
         }
     }
 });
