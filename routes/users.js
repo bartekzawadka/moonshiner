@@ -51,35 +51,42 @@ router.post('/account', jwtConfig, function(req, res, next){
               return;
           }
 
-          data.fullname = userNewInfo.fullname;
-          data.username = userNewInfo.username;
-          if(userNewInfo.picture){
-              data.picture = userNewInfo.picture;
-          }
-          if(userNewInfo.password){
-              data.password = userNewInfo.password;
-          }
+          Users.find({username: userNewInfo.username}, function(e, user){
+              if(user.length && userNewInfo.username !== user[0].username){
+                  res.writeHead(500, {"Content-Type": "application/json"});
+                  res.end(JSON.stringify({error: "Specified username already exists"}));
+              }else{
+                  data.fullname = userNewInfo.fullname;
+                  data.username = userNewInfo.username;
+                  if(userNewInfo.picture){
+                      data.picture = userNewInfo.picture;
+                  }
+                  if(userNewInfo.password){
+                      data.password = userNewInfo.password;
+                  }
 
-          Users.findOneAndUpdate({_id: id}, data, {new: true}, function(e, result){
-             if(e){
-                 res.writeHead(500, {"Content-Type": "application/json"});
-                 res.end(JSON.stringify({error: "Unable to save user settings: "+e}));
-                 return;
-             }
+                  Users.findOneAndUpdate({_id: id}, data, {new: true}, function(e, result){
+                      if(e){
+                          res.writeHead(500, {"Content-Type": "application/json"});
+                          res.end(JSON.stringify({error: "Unable to save user settings: "+e}));
+                          return;
+                      }
 
-             var userData = {
-                 _id: result._id,
-                 username: result.username,
-                 fullname: result.fullname
-             };
+                      var userData = {
+                          _id: result._id,
+                          username: result.username,
+                          fullname: result.fullname
+                      };
 
-             var sendData = {
-                 token: authHelper.getToken(userData),
-                 picture: result.picture
-             };
+                      var sendData = {
+                          token: authHelper.getToken(userData),
+                          picture: result.picture
+                      };
 
-              res.writeHead(200, {"Content-Type": "application/json"});
-              res.end(JSON.stringify({success: true, auth: sendData}));
+                      res.writeHead(200, {"Content-Type": "application/json"});
+                      res.end(JSON.stringify({success: true, auth: sendData}));
+                  });
+              }
           });
       });
    });
@@ -255,7 +262,7 @@ router.post('/register', function (req, res, next) {
     }).exec(function (error, data) {
         if (data && data.length > 0) {
             res.writeHead(422, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({error: "User with specified name already exists"}));
+            res.end(JSON.stringify({error: "User with specified email already exists"}));
             return;
         }
 
