@@ -43,7 +43,12 @@ var liquidSchema = mongoose.Schema({
     ],
     lastUpdate: {type: Date, required: true},
     author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    isPrivate: {type: Boolean, required: true}
+    isPrivate: {type: Boolean, required: true},
+    favorites: [
+        {
+            user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
+        }
+    ]
 }, {
     collection: "Liquids"
 });

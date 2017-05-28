@@ -7,7 +7,18 @@
 		<div>
 			<form name="liquidForm">
 				<section>
-					<div class="label">General</div>
+					<div flex layout="row">
+						<div class="label">General</div>
+						<span flex></span>
+						<md-button class="md-icon-button" ng-click="toggleFavorite()" ng-if="account.isAuthenticated && !isNewDocument">
+							<md-tooltip>
+								{{favoriteConfig.tooltip}}
+							</md-tooltip>
+							<md-icon md-font-library="material-icons" class="favorite" ng-style="{'font-size': '30px', 'color': favoriteConfig.color}">
+								{{favoriteConfig.icon}}
+							</md-icon>
+						</md-button>
+					</div>
 					<input type="hidden" ng-model="liquid.id">
 					<md-input-container class="md-block">
 						<label>Name</label>

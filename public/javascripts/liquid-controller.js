@@ -30,6 +30,7 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
     $scope.canAddRating = false;
 
     $scope.isNewDocument = false;
+    $scope.favoriteConfig = getFavoriteConfig();
 
     $scope.cancelButton = {
         text: "Cancel",
@@ -57,6 +58,24 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         author: ""
     };
 
+    function getFavoriteConfig(isFavorite){
+        if(isFavorite === true){
+            return {
+                icon: "favorite",
+                tooltip: "Remove from favorites",
+                isFavorite: true,
+                color: '#E63946'
+            }
+        }else{
+            return {
+                icon: "favorite_border",
+                tooltip: "Add to favorites",
+                isFavorite: false,
+                color: '#a0a0a0'
+            }
+        }
+    }
+
     function loadView(){
         if($routeParams.id){
             editMode($routeParams.id);
@@ -75,6 +94,10 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         $scope.cancelButton.text = "Go back";
         $scope.cancelButton.icon = "arrow_back";
 
+        getLiquid();
+    }
+
+    function getLiquid(){
         $http.get('/api/liquid/'+$routeParams.id).then(function(data){
             if(!data)
                 return;
@@ -83,11 +106,13 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
             updateRatingSection();
 
             $scope.commentsVisible = (($scope.$parent.account && $scope.$parent.account.isAuthenticated)
-                                    || ($scope.liquid.comments != null && $scope.liquid.comments.length > 0));
+            || ($scope.liquid.comments != null && $scope.liquid.comments.length > 0));
 
             $scope.accessoriesVisible = $scope.isNewDocument || ($scope.liquid.accessories != null && $scope.liquid.accessories.length > 0);
 
             $scope.showLoader = false;
+
+            $scope.favoriteConfig = getFavoriteConfig(data.data.isFavorite);
         }, function(){
             $scope.showLoader = false;
             $location.path('/liquids');
@@ -211,6 +236,25 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
             editMode($scope.liquid.id);
             updateRatingSection();
         });
+    };
+
+    $scope.toggleFavorite = function(){
+        var favorite = {
+            liquidId: $scope.liquid.id
+        };
+
+        if($scope.favoriteConfig.isFavorite){
+            favorite.insert = -1;
+        }else{
+            favorite.insert = 1;
+        }
+
+        $http.post('/api/liquid/favorites', favorite).then(function(data){
+            console.log(data);
+            getLiquid();
+        }, function(e){
+            console.log(e);
+        })
     };
 
     $scope.clickHandler= function (prop) {

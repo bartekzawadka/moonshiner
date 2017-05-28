@@ -5,6 +5,7 @@ var express = require('express');
 var expressJwt = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var _ = require('lodash');
 var router = express.Router();
 var path = require('path');
 var queryHelper = require('./helpers/query-helper');
@@ -40,10 +41,81 @@ var getUserId = function (req, callback) {
         } catch (Exception) {
             callback();
         }
-    }else{
+    } else {
         callback();
     }
 };
+
+router.post('/liquid/favorites', jwtConfig, function (req, res) {
+    var data = req.body;
+
+    if (!data) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        return res.end(JSON.stringify({
+            error: "Adding to favorites failed - error parsing request data. No data received"
+        }));
+    }
+
+    if (!data.liquidId) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        return res.end(JSON.stringify({
+            error: "Adding to favorites failed - recipie ID not provided"
+        }));
+    }
+
+    var insert = 1;
+    if (data.insert) {
+        insert = data.insert;
+    }
+
+    var userId = req.user._id;
+
+    Liquid.find({_id: data.liquidId, "favorites.user": userId}, '_id', function (r, d) {
+        if (r) {
+            res.writeHead(500, {"Content-Type": "application/json"});
+            return res.end(JSON.stringify({
+                error: r
+            }));
+        }
+
+        var updateInfo = {
+            "favorites": {
+                "user": userId
+            }
+        };
+        var input = {};
+
+        if (d.length && d.length > 0) {
+            if (insert < 0) {
+                // remove
+                input["$pull"] = updateInfo;
+            }
+        } else {
+            if (insert >= 0) {
+                // add
+                input["$push"] = updateInfo;
+            }
+        }
+
+        if(_.has(input, '$pull') || _.has(input, '$push')){
+            Liquid.findOneAndUpdate(data.liquidId, input, {safe: true, upsert: true}, function (err, results) {
+                if (err) {
+                    res.writeHead(500, {"Content-Type": "application/json"});
+                    return res.end(JSON.stringify({
+                        error: err
+                    }));
+                }
+
+                res.writeHead(200, {"Content-Type": "application/json"});
+                return res.end();
+            });
+        }else{
+            res.writeHead(200, {"Content-Type": "application/json"});
+            return res.end();
+        }
+
+    });
+});
 
 router.post('/liquid/comment', jwtConfig, function (req, res) {
     var data = req.body;
@@ -146,54 +218,82 @@ router.get('/liquid/:id', function (req, res) {
         select: '_id fullname username'
     }];
 
-    Liquid.findById(req.params.id).populate(populate).exec(function (err, data) {
-        if (err) {
-            res.writeHead(500, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({
-                success: false,
-                error: err
-            }));
-        } else {
+    getUserId(req, function (userId) {
 
-            getUserId(req, function (userId) {
+        var obj = Liquid.findById(req.params.id);
+
+        if(userId){
+            populate.push({
+                path: 'favorites',
+                match: {'user': userId}
+            });
+        }else{
+            obj.select('-favorites');
+        }
+
+        obj.populate(populate).exec(function (err, data) {
+            if (err) {
+                res.writeHead(500, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({
+                    success: false,
+                    error: err
+                }));
+            } else {
+
                 if (!userId || (userId && data && data.author && userId !== data.author._id)) {
-                    if(data.isPrivate) {
+                    if (data.isPrivate) {
                         sendContentInaccessible(res);
                         return;
                     }
                 }
+
+                var responseData = {};
+
+                for(var k in data._doc){
+                    if(data._doc.hasOwnProperty(k)){
+                        responseData[k] = data._doc[k];
+                    }
+                }
+
+                responseData.isFavorite = !!(responseData.favorites && responseData.favorites.length && responseData.favorites.length>0);
+
+                if(responseData.favorites)
+                    delete responseData.favorites;
+
+
                 res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(data));
-            });
-        }
+                res.end(JSON.stringify(responseData));
+
+            }
+        });
     });
 });
 
-router.get('/liquids/user/:id', jwtConfig, function(req, res){
+router.get('/liquids/user/:id', jwtConfig, function (req, res) {
 
-    if(!req.params.id){
-                    res.writeHead(500, {"Content-Type": "application/json"});
-                    res.end(JSON.stringify({
-                        success: false,
-                        error: "User ID was not provided"
-                    }));
+    if (!req.params.id) {
+        res.writeHead(500, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({
+            success: false,
+            error: "User ID was not provided"
+        }));
     }
 
-    queryHelper.getItemsList(req, res, Liquid, function(match){
-            if (!match || match == null || (Object.keys(match).length === 0 && match.constructor === Object)) {
-                match = {
-                    "$and": [
-                        {"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}}
-                    ]
-                }
-            }else{
-                if(!match["$and"]){
-                    match["$and"] = [];
-                }
-                match["$and"].push({"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}});
+    queryHelper.getItemsList(req, res, Liquid, function (match) {
+        if (!match || match == null || (Object.keys(match).length === 0 && match.constructor === Object)) {
+            match = {
+                "$and": [
+                    {"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}}
+                ]
             }
-            return match;
-    }, function(sort){
+        } else {
+            if (!match["$and"]) {
+                match["$and"] = [];
+            }
+            match["$and"].push({"author._id": {"$in": [mongoose.Types.ObjectId(req.params.id)]}});
+        }
+        return match;
+    }, function (sort) {
         if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
             sort = {
                 "nameLower": 1
@@ -205,15 +305,15 @@ router.get('/liquids/user/:id', jwtConfig, function(req, res){
 
 router.get('/liquids', function (req, res) {
 
-    queryHelper.getItemsList(req, res, Liquid, function(match, userId){
-            if (!match || match === null || (Object.keys(match).length === 0 && match.constructor === Object)) {
-                match = {
-                    "$and": [
-                        {"isPrivate": false}
-                    ]
-                };
-            }
-            return match;
+    queryHelper.getItemsList(req, res, Liquid, function (match, userId) {
+        if (!match || match === null || (Object.keys(match).length === 0 && match.constructor === Object)) {
+            match = {
+                "$and": [
+                    {"isPrivate": false}
+                ]
+            };
+        }
+        return match;
     }, function (sort) {
         if (!sort || (Object.keys(sort).length === 0 && sort.constructor === Object)) {
             sort = {
