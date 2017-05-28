@@ -30,13 +30,14 @@ function AccountController($scope, $http, $location, AuthService){
         }).then(function(res){
             AuthService.updateUserInfo(res.data.auth);
             loadProfile();
+            $location.path('/');
         }, function(e){
             console.log(e);
         })
     };
 
     $scope.abortChanges = function(){
-      $location('/liquids');
+      $location.path('/liquids');
     };
 
     var loadProfile = function() {
