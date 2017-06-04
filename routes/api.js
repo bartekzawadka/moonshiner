@@ -162,20 +162,48 @@ router.post('/liquid/rating', jwtConfig, function (req, res) {
     var rating = data.rating;
     rating.date = new Date();
 
-    Liquid.findByIdAndUpdate(liquidId, {
-        $push: {
-            "ratings": rating
-        }
-    }, {safe: true, upsert: true}, function (err, results) {
-        if (err) {
-            res.writeHead(500, {"Content-Type": "application/json"});
+    getUserId(req, function(id){
+        if(!id){
+            res.writeHead(401, {"Content-Type": "application/json"});
             return res.end(JSON.stringify({
-                error: err
+                error: "User is not logged in or not authorised"
             }));
         }
 
-        res.writeHead(200, {"Content-Type": "application/json"});
-        return res.end();
+        Liquid.find({_id: liquidId, "ratings.author": id}, function(e, liq){
+           if(liq && liq.length && liq.length > 0){
+               Liquid.update({_id: liquidId, "ratings.author": id}, {"$set": {
+                   "ratings.$.rating": rating.rating,
+                   "ratings.$.date": rating.date
+               }}, function(err, result){
+                   if (err) {
+                       res.writeHead(500, {"Content-Type": "application/json"});
+                       return res.end(JSON.stringify({
+                           error: err
+                       }));
+                   }
+
+                   res.writeHead(200, {"Content-Type": "application/json"});
+                   return res.end();
+               });
+           }else{
+               Liquid.findByIdAndUpdate(liquidId, {
+                   $push: {
+                       "ratings": rating
+                   }
+               }, {safe: true, upsert: true}, function (err, results) {
+                   if (err) {
+                       res.writeHead(500, {"Content-Type": "application/json"});
+                       return res.end(JSON.stringify({
+                           error: err
+                       }));
+                   }
+
+                   res.writeHead(200, {"Content-Type": "application/json"});
+                   return res.end();
+               });
+           }
+        });
     });
 });
 

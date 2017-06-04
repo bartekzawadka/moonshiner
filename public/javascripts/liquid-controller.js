@@ -27,7 +27,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
 
     $scope.rating = 0;
 
-    $scope.canAddRating = false;
+    $scope.canSetRating = false;
+    $scope.isRequestingRating = false;
 
     $scope.isNewDocument = false;
     $scope.favoriteConfig = getFavoriteConfig();
@@ -36,8 +37,6 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         text: "Cancel",
         icon: "clear"
     };
-    //$scope.cancelButtonText = "Cancel";
-
 
     $scope.liquid = {
         id: "",
@@ -86,7 +85,8 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
 
     loadView();
 
-    updateRatingSection();
+    if($scope.isNewDocument)
+        updateRatingSection();
 
     function editMode(id){
         $scope.isNewDocument = false;
@@ -139,24 +139,24 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
 
     function updateRatingSection (){
 
-        if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated
-            || !$scope.liquid.author || AuthService.getUser().user._id == $scope.liquid.author._id) {
-            $scope.canAddRating = false;
+        if($scope.isNewDocument || !AuthService.getUser()|| !AuthService.getUser().isAuthenticated) {
+            $scope.canSetRating = false;
             return;
         }
 
         if(!$scope.liquid.ratings || $scope.liquid.ratings.length == 0) {
-            $scope.canAddRating = true;
-            return;
+            $scope.canSetRating = true;
+            //return;
         }
-        for(var k in $scope.liquid.ratings){
+
+        for(var k in $scope.liquid.ratings) {
             if($scope.liquid.ratings[k].author && $scope.liquid.ratings[k].author._id == AuthService.getUser().user._id) {
-                $scope.canAddRating = false;
-                return;
+                $scope.rating = $scope.liquid.ratings[k].rating;
+                break;
             }
         }
 
-        $scope.canAddRating = true;
+        $scope.canSetRating = true;
     }
 
     $scope.addAroma = function(){
@@ -219,22 +219,28 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         );
     };
 
-    $scope.addRating = function(){
+    $scope.setRating = function(prop){
+
+        if($scope.isRequestingRating)
+            return;
+
         var rating = {
             author: AuthService.getUser().user._id,
-            rating: $scope.rating
+            rating: prop
         };
+
+        $scope.isRequestingRating = true;
 
         $http.post('/api/liquid/rating', {
             liquidId: $scope.liquid.id,
             rating: rating
         }).then(function(data){
+            $scope.isRequestingRating = false;
             editMode($scope.liquid.id);
-            updateRatingSection();
         }, function(e){
-            alert(e);
+            $scope.isRequestingRating = false;
+            console.log(e);
             editMode($scope.liquid.id);
-            updateRatingSection();
         });
     };
 
@@ -255,10 +261,6 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
         }, function(e){
             console.log(e);
         })
-    };
-
-    $scope.clickHandler= function (prop) {
-        $scope.rating = prop;
     };
 
     $scope.showRatings = function(){
@@ -292,4 +294,4 @@ function LiquidController($scope,$location, $window, $http, $timeout, $routePara
             console.log(e);
         });
     };
-};
+}
